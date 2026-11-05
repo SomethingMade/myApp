@@ -12,6 +12,19 @@
 </head>
 <body>
 
+<!-- Age Verification Modal Gate -->
+<div id="age-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <h2 id="modal-title">Age Verification Required</h2>
+    <p>You must be 18 years or older to enter Shaka Liquor &amp; Restaurant. Please confirm your age to continue.</p>
+    <div class="modal-actions">
+      <button class="btn btn-small" id="age-yes">I am 18 or older</button>
+      <button class="btn btn-ghost" id="age-no">Under 18</button>
+    </div>
+    <p class="error" id="age-error" role="alert"></p>
+  </div>
+</div>
+
 <header class="nav">
   <a class="logo" href="#top">Shaka</a>
   <button class="nav-toggle" aria-expanded="false" aria-controls="menu-links" aria-label="Open menu">Menu</button>
@@ -20,6 +33,14 @@
     <a href="#about">About</a>
     <a href="#visit">Hours</a>
     <a class="btn btn-small" href="#book">Book a table</a>
+    <!-- Firebase Auth Section -->
+    <div id="auth-container">
+      <button id="google-signin-btn" class="btn btn-ghost auth-btn">Sign In / Up with Google</button>
+      <div id="user-profile" class="user-profile hidden">
+        <span id="user-name"></span>
+        <button id="google-signout-btn" class="btn btn-ghost btn-small">Sign Out</button>
+      </div>
+    </div>
   </nav>
 </header>
 
@@ -87,6 +108,7 @@
   <p>&copy; <span id="year"></span> Shaka Liquor Restaurant</p>
 </footer>
 
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
+
