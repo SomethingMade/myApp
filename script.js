@@ -1,4 +1,101 @@
-// ---------- Menu data (prices in rand) ----------
+
+
+### `script.js`
+
+```javascript
+// Import Firebase modular SDK modules via CDN ESM
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+
+// ---------- Firebase Configuration ----------
+const firebaseConfig = {
+  apiKey: "AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",
+  authDomain: "fire-b-a8878.firebaseapp.com",
+  databaseURL: "https://fire-b-a8878.firebaseio.com",
+  projectId: "fire-b-a8878",
+  storageBucket: "fire-b-a8878.firebasestorage.app",
+  messagingSenderId: "658673187627",
+  appId: "1:658673187627:web:32699cbc33e85f4bafa36e",
+  measurementId: "G-2505EVBRWX"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+// ---------- Google Auth Elements ----------
+const googleSigninBtn = document.getElementById("google-signin-btn");
+const googleSignoutBtn = document.getElementById("google-signout-btn");
+const userProfileDiv = document.getElementById("user-profile");
+const userNameSpan = document.getElementById("user-name");
+
+// Handle Google Sign-In / Sign-Up
+googleSigninBtn.addEventListener("click", () => {
+  signInWithPopup(auth, googleProvider)
+    .then((result) => {
+      const user = result.user;
+      console.log("Logged in as:", user.displayName);
+    })
+    .catch((error) => {
+      console.error("Auth error:", error.message);
+    });
+});
+
+// Handle Sign Out
+googleSignoutBtn.addEventListener("click", () => {
+  signOut(auth).then(() => {
+    console.log("Signed out successfully");
+  }).catch((error) => {
+    console.error("Sign out error:", error);
+  });
+});
+
+// Monitor Auth State Changes (Sync UI)
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    googleSigninBtn.classList.add("hidden");
+    userProfileDiv.classList.remove("hidden");
+    userNameSpan.textContent = `Hi, ${user.displayName || user.email.split('@')[0]}`;
+    
+    // Pre-fill booking name if available
+    const nameInput = document.getElementById("book-form")?.elements?.name;
+    if (nameInput && !nameInput.value) {
+      nameInput.value = user.displayName || "";
+    }
+  } else {
+    googleSigninBtn.classList.remove("hidden");
+    userProfileDiv.classList.add("hidden");
+    userNameSpan.textContent = "";
+  }
+});
+
+// ---------- Age Verification Modal Gate ----------
+const modal = document.getElementById("age-modal");
+const btnYes = document.getElementById("age-yes");
+const btnNo = document.getElementById("age-no");
+const ageError = document.getElementById("age-error");
+
+if (localStorage.getItem("shaka_age_verified") === "true") {
+  modal.classList.add("hidden");
+}
+
+btnYes.addEventListener("click", () => {
+  localStorage.setItem("shaka_age_verified", "true");
+  modal.classList.add("hidden");
+});
+
+btnNo.addEventListener("click", () => {
+  ageError.textContent = "Sorry, you must be 18 or older to view this site.";
+});
+
+// ---------- Menu data (prices in rand)[cite: 2] ----------
 const MENU = {
   food: [
     { name: "Shaka flame-grilled ribs", desc: "Slow-cooked, finished over coals, sticky glaze, chips.", price: 195 },
@@ -23,7 +120,7 @@ const MENU = {
   ]
 };
 
-// ---------- Opening hours (24h clock; close above 24 runs past midnight) ----------
+// ---------- Opening hours (24h clock; close above 24 runs past midnight)[cite: 2] ----------
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const HOURS = [
   { open: 10, close: 22 }, // Sun
@@ -38,7 +135,7 @@ const HOURS = [
 const pad = n => String(n % 24).padStart(2, "0") + ":00";
 const money = n => "R" + n;
 
-// ---------- Menu tabs ----------
+// ---------- Menu tabs[cite: 2] ----------
 const list = document.getElementById("menu-list");
 const tabs = document.querySelectorAll(".tabs button");
 
@@ -59,10 +156,9 @@ tabs.forEach(tab => {
 });
 renderMenu("food");
 
-// ---------- Hours list + open/closed status ----------
+// ---------- Hours list + open/closed status[cite: 2] ----------
 function renderHours() {
   const today = new Date().getDay();
-  // Monday first
   const order = [1, 2, 3, 4, 5, 6, 0];
   document.getElementById("hours-list").innerHTML = order.map(d => `
     <li class="${d === today ? "today" : ""}">
@@ -93,7 +189,7 @@ renderHours();
 updateStatus();
 setInterval(updateStatus, 60000);
 
-// ---------- Mobile nav ----------
+// ---------- Mobile nav[cite: 2] ----------
 const toggle = document.querySelector(".nav-toggle");
 const links = document.getElementById("menu-links");
 toggle.addEventListener("click", () => {
@@ -102,14 +198,14 @@ toggle.addEventListener("click", () => {
   toggle.textContent = open ? "Close" : "Menu";
 });
 links.addEventListener("click", e => {
-  if (e.target.tagName === "A") {
+  if (e.target.tagName === "A" && !e.target.closest('#auth-container')) {
     links.classList.remove("open");
     toggle.setAttribute("aria-expanded", "false");
     toggle.textContent = "Menu";
   }
 });
 
-// ---------- Booking form ----------
+// ---------- Booking form[cite: 2] ----------
 const form = document.getElementById("book-form");
 const errorBox = document.getElementById("form-error");
 const confirmBox = document.getElementById("form-confirm");
@@ -147,3 +243,6 @@ form.addEventListener("submit", e => {
 });
 
 document.getElementById("year").textContent = new Date().getFullYear();
+
+```
+
