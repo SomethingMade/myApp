@@ -112,46 +112,36 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .empty{color:var(--muted);text-align:center;padding:36px 12px}
 .bars{display:flex;align-items:flex-end;gap:12px;height:140px;}
 
-/* ---------- targeted dashboard updates ---------- */
-#app {
+/* ---------- targeted dashboard overrides ---------- */
+body, button, input, select, textarea, h1, h2, h3, b, span, a, div {
   font-style: italic !important;
 }
-
-#app h1, #app h2, #app h3, #app b, #app span, #app a, #app button, #app div {
-  font-style: italic;
-}
-
-/* Button to Pill Shape */
-#app .btn, #app button {
+.btn, button, input, select, textarea {
   border-radius: 9999px !important;
 }
-
-/* Tickets (Stats Summary Panels) to Full Width List View Stack */
-#app .stats {
+.stats {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
 }
-#app .stat {
+.stat {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   padding: 12px 20px !important;
   border-radius: 8px !important;
 }
-#app .stat b {
+.stat b {
   margin-top: 0 !important;
   font-size: 24px !important;
 }
-
-/* Sidebar Navigation Items to a Clean Grid Layout */
-#app .nav {
+.nav {
   display: grid !important;
   grid-template-columns: repeat(2, 1fr) !important;
   gap: 8px !important;
   align-content: start !important;
 }
-#app .nav a {
+.nav a {
   flex-direction: column !important;
   align-items: center !important;
   text-align: center !important;
@@ -159,7 +149,7 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
   font-size: 12px !important;
   border-radius: 8px !important;
 }
-#app .nav a .badge {
+.nav a .badge {
   margin-left: 0 !important;
   margin-top: 4px !important;
 }
@@ -167,9 +157,27 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 </head>
 <body>
 
+  <!-- Replace this section cleanly with your actual application layout elements -->
   <div id="app">
-    <!-- App layout elements execute safely here -->
-  </div>
-
-</body>
-</html>
+    <div class="rail">
+      <div class="brand">
+        <div class="logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg>
+        </div>
+        <div>
+          <b>Haba</b>
+          <small>Support</small>
+        </div>
+      </div>
+      <div class="nav">
+        <a class="active" href="#">Overview</a>
+        <a href="#">Inbox <span class="badge">4</span></a>
+        <a href="#">Customers</a>
+        <a href="#">Reports</a>
+        <a href="#">Replies</a>
+        <a href="#">Team</a>
+      </div>
+      <div class="me">
+        <div class="av">KP</div>
+        <div class="who">
+          <b>Katlego Phasha</b>
