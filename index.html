@@ -112,32 +112,39 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .empty{color:var(--muted);text-align:center;padding:36px 12px}
 .bars{display:flex;align-items:flex-end;gap:12px;height:140px;}
 
-/* ---------- OVERRIDE LAYOUT RULE CONFIGURATIONS ---------- */
-#app, #app h1, #app h2, #app h3, #app b, #app span, #app a, #app button, #app div, #app p {
+/* ---------- POLISHED LAYOUT MODIFICATIONS OVERRIDES ---------- */
+
+/* 1. Universal Italic Treatment */
+#app h2, #app h3, #app b, #app span, #app a, #app button, #app p, #app .t, #app .s {
   font-style: italic !important;
 }
-#app .btn, #app button, #app .primary {
+
+/* 2. Seamless Pill Button Shape Switcher */
+#app .btn, #app button {
   border-radius: 9999px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
 }
+
+/* 3. Metrics Stacking: Full Width List Rows */
 #app .stats {
   display: flex !important;
   flex-direction: column !important;
   gap: 10px !important;
-  width: 100% !important;
 }
 #app .stat {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   padding: 14px 20px !important;
-  border-radius: 8px !important;
-  background: var(--panel) !important;
-  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
 }
 #app .stat b {
   margin-top: 0 !important;
-  font-size: 22px !important;
+  font-size: 26px !important;
 }
+
+/* 4. Sidebar Items: High Performance 2-Column Grid Layout */
 #app .nav {
   display: grid !important;
   grid-template-columns: repeat(2, 1fr) !important;
@@ -145,35 +152,33 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
   align-content: start !important;
 }
 #app .nav a {
-  display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  padding: 16px 8px !important;
+  padding: 14px 6px !important;
   font-size: 12px !important;
   border-radius: 12px !important;
-  background: transparent;
-  border: 1px solid transparent;
+  gap: 6px !important;
 }
-#app .nav a:hover, #app .nav a.active {
-  background: var(--soft) !important;
-  border-color: var(--line) !important;
-}
-#app .nav a svg {
-  margin-bottom: 6px !important;
-}
-#app .nav .badge {
+#app .nav a .badge {
   margin-left: 0 !important;
-  margin-top: 4px !important;
-  position: relative !important;
+  margin-top: 2px !important;
 }
 </style>
 </head>
 <body>
 
-  <!-- The app container contains your exact structural elements so logic views bind naturally -->
   <div id="app">
     <div class="rail">
       <div class="brand">
         <div class="logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg>
+        </div>
+        <div>
+          <b>Haba</b>
+          <small>Support</small>
+        </div>
+      </div>
+      <div class="nav">
+        <a class="active" href="#">Overview</a>
