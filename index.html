@@ -125,7 +125,14 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 
 /* cards / stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.stat{perspective:900px;min-height:118px}
+.flip{position:relative;width:100%;height:100%;min-height:118px;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.stat:hover .flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.face.back{transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;gap:6px;background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.face.back span{color:inherit;opacity:.7}
+.face.back small{color:inherit;font-size:14px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){.flip{transition:none}}
 .stat span{color:var(--muted);font-size:12.5px;font-weight:600}
 .stat b{display:block;font-family:var(--serif);font-weight:500;font-size:34px;line-height:1.1;margin-top:6px}
 .stat small{color:var(--faint)}
@@ -630,7 +637,7 @@ function renderOverview() {
   if (!S.me) return;
   const h = new Date().getHours();
   $('#ov-greet').textContent = `${h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'}, ${S.me.name.split(' ')[0]}`;
-  if (!S.ticketsLoaded) { $('#ov-stats').innerHTML = Array.from({ length: 4 }, () => '<div class="stat"><div class="sk" style="height:60px"></div></div>').join(''); return; }
+  if (!S.ticketsLoaded) { $('#ov-stats').innerHTML = Array.from({ length: 4 }, () => '<div class="stat"><div class="flip"><div class="face front"><div class="sk" style="height:60px"></div></div></div></div>').join(''); return; }
   const all = Object.values(S.tickets);
   const open = all.filter(t => t.status === 'open');
   const waiting = all.filter(t => t.status === 'pending');
@@ -642,13 +649,13 @@ function renderOverview() {
   const avgFr = frs.length ? dur(frs.reduce((a, b) => a + b, 0) / frs.length) : '—';
   const rated = all.filter(t => typeof t.rating === 'number');
   const csat = rated.length ? (rated.reduce((a, t) => a + t.rating, 0) / rated.length).toFixed(1) + ' / 5' : '—';
-  const card = (l, v, s = '') => `<div class="stat"><span>${l}</span><b>${v}</b><small>${s}</small></div>`;
+  const card = (l, v, s = '', back = '') => `<div class="stat"><div class="flip"><div class="face front"><span>${l}</span><b>${v}</b><small>${s}</small></div><div class="face back"><span>${l}</span><small>${back}</small></div></div></div>`;
   $('#ov-stats').innerHTML =
-    card('Open', open.length, `${unassigned.length} unassigned`) +
-    card('Waiting on customer', waiting.length) +
-    card('Resolved today', resolvedToday.length) +
-    card('First reply (7 days)', avgFr, `${frs.length} ticket${frs.length === 1 ? '' : 's'}`) +
-    card('Satisfaction', csat, `${rated.length} rating${rated.length === 1 ? '' : 's'}`);
+    card('Open', open.length, `${unassigned.length} unassigned`, `${unassigned.length} unassigned and ${open.length - unassigned.length} assigned. These need a reply from the team.`) +
+    card('Waiting on customer', waiting.length, '', 'We replied and are waiting to hear back from the customer.') +
+    card('Resolved today', resolvedToday.length, '', 'Tickets closed since midnight.') +
+    card('First reply (7 days)', avgFr, `${frs.length} ticket${frs.length === 1 ? '' : 's'}`, 'Average time from a ticket opening to the first agent reply.') +
+    card('Satisfaction', csat, `${rated.length} rating${rated.length === 1 ? '' : 's'}`, 'Average customer rating across all rated tickets.');
 
   const needs = all.filter(t => t.status === 'open' && t.lastSender !== 'agent')
     .sort((a, b) => (a.updatedAt || 0) - (b.updatedAt || 0)).slice(0, 8);
