@@ -6,7 +6,7 @@
 <title>Haba Support</title>
 <meta name="robots" content="noindex,nofollow">
 <style>
-:root}
+:root{
   --bg:#FAF9F5; --panel:#FFFFFF; --soft:#F3F1EA; --line:#E7E4DA; --ink:#1F1E1D; --muted:#6F6B63; --faint:#9B968B;
   --brand:#111111; --brand-ink:#FFFFFF; --accent:#D97757;
   --open:#C2410C; --open-bg:#FDEEE6; --pending:#92600A; --pending-bg:#FBF1D9; --resolved:#166534; --resolved-bg:#E4F4E8;
@@ -71,6 +71,19 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .nav a:hover{background:var(--soft);color:var(--ink)}
 .nav a.active{background:var(--soft);color:var(--ink)}
 .nav .badge{margin-left:auto;background:var(--accent);color:#fff;border-radius:999px;font-size:11.5px;font-weight:700;padding:1px 7px;min-width:20px;text-align:center}
+
+/* icon-only sidebar */
+#app{grid-template-columns:68px minmax(0,1fr)}
+.rail{padding:16px 10px;align-items:center}
+.brand{padding:4px 0 18px;justify-content:center}
+.brand > div:last-child{display:none}
+.nav{align-items:center}
+.nav a{position:relative;width:44px;height:44px;padding:0;justify-content:center}
+.nav a .lbl{display:none}
+.nav .badge{position:absolute;top:1px;right:-2px;margin:0;font-size:10.5px;min-width:18px;padding:0 5px}
+.me{flex-direction:column;gap:6px;padding:10px 0 0}
+.me .who{display:none}
+
 .me{display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid var(--line);margin-top:8px}
 .me .who{min-width:0;flex:1}
 .me .who b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
@@ -97,7 +110,7 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 /* cards / stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
 .stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
-.stat span{color:var(--mutaed);font-size:12.5px;font-weight:600}
+.stat span{color:var(--muted);font-size:12.5px;font-weight:600}
 .stat b{display:block;font-family:var(--serif);font-weight:500;font-size:34px;line-height:1.1;margin-top:6px}
 .stat small{color:var(--faint)}
 .grid2{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px}
@@ -230,9 +243,10 @@ code.k{background:var(--soft);border-radius:6px;padding:1px 6px;font-size:12px}
   .brand,.me .who,.me .sp{display:none}
   .nav{flex-direction:row;justify-content:space-around;overflow:visible}
   .nav a{flex-direction:column;gap:2px;font-size:11px;padding:6px 8px;position:relative}
-  .nav a span.lbl{display:block}
+  .nav a{width:auto;height:auto;padding:10px 14px}
+  .nav a span.lbl{display:none}
   .nav .badge{position:absolute;top:0;right:2px;margin:0}
-  .me{border:0;margin:0;padding:0}
+  .me{border:0;margin:0;padding:0;flex-direction:row}
   .main{order:1}
   .page{padding:20px 16px 28px}.page-head h2{font-size:25px}
   .inbox{grid-template-columns:1fr}
@@ -438,6 +452,9 @@ function confirmBox(title, text, okLabel = 'Confirm') {
     });
   });
 }
+
+/* sidebar: icon-only, so show the label as a tooltip */
+$$('#nav a').forEach(a => { a.title = a.querySelector('.lbl').textContent; });
 
 /* ---------------- state ---------------- */
 const S = {
