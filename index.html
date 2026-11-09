@@ -231,22 +231,24 @@ code.k{background:var(--panel);border:1px solid var(--line);border-radius:4px;pa
 @media (max-width:820px){
   body{overflow:hidden}
   #app{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
-  .rail{order:2;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line)}
+  .rail{order:2;flex-direction:row;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid rgba(0,0,0,0.08);background:#ffffff;box-shadow:0 -4px 20px rgba(0,0,0,0.04)}
   .brand,.me .who,.me .sp{display:none}
   .nav{flex-direction:row;justify-content:space-around;overflow:visible}
-  .nav a{flex-direction:column;gap:2px;font-size:11px;padding:6px 8px;position:relative}
+  .nav a{flex-direction:column;gap:4px;font-size:12px;font-weight:500;color:#6b7280;padding:8px 12px;position:relative;transition:all 0.2s ease}
   .nav a span.lbl{display:block}
-  .nav .badge{position:absolute;top:0;right:2px;margin:0}
+  .nav .badge{position:absolute;top:2px;right:4px;margin:0;background:#ef4444;color:#ffffff;border-radius:9999px;font-size:10px;padding:2px 6px}
   .me{border:0;margin:0;padding:0}
-  .main{order:1}
-  .page{padding:20px 16px 28px}.page-head h2{font-size:25px}
+  .main{order:1;background:#f9fafb}
+  .page{padding:24px 20px 32px}.page-head h2{font-size:28px;font-weight:700;letter-spacing:-0.02em;color:#111827}
   .inbox{grid-template-columns:1fr}
   .inbox .list-pane,.inbox .thread-pane{grid-column:1;grid-row:1}
   .inbox:not(.show-thread) .thread-pane{display:none}
   .inbox.show-thread .list-pane{display:none}
-  .grid2{grid-template-columns:1fr}
-  .msg{max-width:88%}
-  #toasts{right:10px;left:10px;bottom:76px}
+  .grid2{grid-template-columns:1fr;gap:16px}
+  .msg{max-width:85%;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.02)}
+  #toasts{right:16px;left:16px;bottom:84px;gap:8px}
+}
+
 }
 </style>
 </head>
