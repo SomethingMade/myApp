@@ -1,1164 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Haba Support</title>
-<meta name="robots" content="noindex,nofollow">
-<style>
-:root{
-  --bg:#FAF9F5; --panel:#FFFFFF; --soft:#F3F1EA; --line:#E7E4DA; --ink:#1F1E1D; --muted:#6F6B63; --faint:#9B968B;
-  --brand:#111111; --brand-ink:#FFFFFF; --accent:#D97757;
-  --open:#C2410C; --open-bg:#FDEEE6; --pending:#92600A; --pending-bg:#FBF1D9; --resolved:#166534; --resolved-bg:#E4F4E8;
-  --urgent:#B91C1C; --urgent-bg:#FCE8E8; --note-bg:#FFF7DB; --note-line:#EBD98F;
-  --bubble-in:#F1EEE6; --bubble-out:#111111; --bubble-out-ink:#FFFFFF;
-  --shadow:0 1px 2px rgba(31,30,29,.05),0 8px 24px rgba(31,30,29,.06);
-  --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
-  --sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --bg:#191816; --panel:#22211E; --soft:#2A2926; --line:#34322D; --ink:#F2F0EA; --muted:#A7A298; --faint:#7E7A70;
-    --brand:#F2F0EA; --brand-ink:#191816;
-    --open-bg:#3A2418; --pending-bg:#3A2F14; --resolved-bg:#16301E; --urgent-bg:#3D1B1B; --note-bg:#33300F; --note-line:#5C5420;
-    --bubble-in:#2E2D29; --bubble-out:#F2F0EA; --bubble-out-ink:#191816;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
-  }
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font:14.5px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden}
-h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;margin:0}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haba Support</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 8px;
+        }
 
-/* ---------- auth screens ---------- */
-.auth-wrap{height:100%;display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto}
-.auth-card{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:32px 28px;box-shadow:var(--shadow)}
-.logo{width:44px;height:44px;border-radius:12px;background:#111;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
-.logo svg{width:26px;height:26px;fill:#fff;stroke:none}
-.auth-card h1{font-size:28px;margin-bottom:4px}
-.auth-card p.sub{color:var(--muted);margin:0 0 22px}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.field label{font-size:12.5px;font-weight:600;color:var(--muted)}
-.input,.select,.textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);outline:none;transition:border-color .15s,box-shadow .15s}
-.input:focus,.select:focus,.textarea:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(127,127,127,.15)}
-.textarea{resize:vertical;min-height:80px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-weight:600;transition:background .12s,transform .06s}
-.btn:hover{background:var(--soft)} .btn:active{transform:scale(.98)}
-.btn.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
-.btn.primary:hover{opacity:.9;background:var(--brand)}
-.btn.danger{color:var(--urgent)}
-.btn.sm{padding:6px 11px;font-size:13px;border-radius:8px}
-.btn.block{width:100%}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.err{color:var(--urgent);font-size:13px;min-height:18px;margin:4px 0 8px}
-.link{background:none;border:0;color:var(--muted);text-decoration:underline;padding:0;font-size:13px}
-.uidbox{display:flex;gap:8px;align-items:center;background:var(--soft);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;word-break:break-all;margin:10px 0 16px}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-/* ---------- app shell ---------- */
-#app{height:100%;display:grid;grid-template-columns:236px minmax(0,1fr)}
-.rail{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;min-height:0}
-.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
-.brand .logo{margin:0;width:34px;height:34px;border-radius:9px}
-.brand .logo svg{width:20px;height:20px}
-.brand b{font-family:var(--serif);font-size:19px;font-weight:600}
-.brand small{display:block;color:var(--muted);font-size:11.5px;margin-top:-2px}
-.nav{display:flex;flex-direction:column;gap:2px;flex:1;min-height:0;overflow:auto}
-.nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-weight:600}
-.nav a:hover{background:var(--soft);color:var(--ink)}
-.nav a.active{background:var(--soft);color:var(--ink)}
-.nav .badge{margin-left:auto;background:var(--accent);color:#fff;border-radius:999px;font-size:11.5px;font-weight:700;padding:1px 7px;min-width:20px;text-align:center}
-.me{display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid var(--line);margin-top:8px}
-.me .who{min-width:0;flex:1}
-.me .who b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
-.me .who span{color:var(--muted);font-size:12px;text-transform:capitalize}
-.icon-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;border:0;background:transparent;color:var(--muted)}
-.icon-btn:hover{background:var(--soft);color:var(--ink)}
-.main{min-width:0;min-height:0;display:flex;flex-direction:column}
-.page{display:none;flex:1;min-height:0;overflow:auto;padding:28px 32px 40px}
-.page.active{display:block}
-.page.flex.active{display:flex;padding:0;overflow:hidden}
-.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
-.page-head h2{font-size:30px}
-.page-head p{margin:2px 0 0;color:var(--muted)}
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
 
-/* avatars / chips */
-.av{width:36px;height:36px;border-radius:50%;background:var(--soft) center/cover no-repeat;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted);flex-shrink:0;border:1px solid var(--line)}
-.av.lg{width:64px;height:64px;font-size:22px}
-.av.sm{width:28px;height:28px;font-size:11px}
-.chip{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
-.chip.open{background:var(--open-bg);color:var(--open)} .chip.pending{background:var(--pending-bg);color:var(--pending)} .chip.resolved{background:var(--resolved-bg);color:var(--resolved)}
-.chip.urgent,.chip.high{background:var(--urgent-bg);color:var(--urgent)} .chip.normal,.chip.low,.chip.cat{background:var(--soft);color:var(--muted)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0}
+        h1, h2, h3 {
+            color: var(--text);
+            margin-top: 0;
+            font-weight: 600;
+        }
 
-/* cards / stats */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
-.stat span{color:var(--muted);font-size:12.5px;font-weight:600}
-.stat b{display:block;font-family:var(--serif);font-weight:500;font-size:34px;line-height:1.1;margin-top:6px}
-.stat small{color:var(--faint)}
-.grid2{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 18px 8px;margin-bottom:18px}
-.card h3{font-size:18px;margin-bottom:10px}
-.row{display:flex;align-items:center;gap:12px;padding:11px 4px;border-top:1px solid var(--line);cursor:pointer;border-radius:8px}
-.row:first-of-type{border-top:0}
-.row:hover{background:var(--soft)}
-.row .grow{flex:1;min-width:0}
-.row .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .s{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.empty{color:var(--muted);text-align:center;padding:36px 12px}
-.bars{display:flex;align-items:flex-end;gap:12px;height:140px;padding:6px 4px 0}
-.bars .b{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%}
-.bars .b i{display:block;width:100%;max-width:38px;background:var(--brand);border-radius:6px 6px 2px 2px;min-height:3px;opacity:.88}
-.bars .b em{font-style:normal;font-size:11.5px;color:var(--muted)} .bars .b strong{font-size:12px}
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
 
-/* ---------- inbox (3 panes) ---------- */
-.inbox{display:grid;grid-template-columns:350px minmax(0,1fr) 300px;flex:1;min-height:0;width:100%}
-.pane{min-height:0;display:flex;flex-direction:column;background:var(--panel)}
-.pane+.pane{border-left:1px solid var(--line)}
-.list-head{padding:14px 14px 10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
-.list-head .top{display:flex;align-items:center;justify-content:space-between}
-.list-head h2{font-size:22px}
-.tabs{display:flex;gap:4px;background:var(--soft);padding:3px;border-radius:10px}
-.tabs button{flex:1;border:0;background:transparent;padding:6px 6px;border-radius:8px;font-weight:600;font-size:13px;color:var(--muted)}
-.tabs button.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
-.search{position:relative}
-.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--faint);width:16px;height:16px}
-.search .input{padding-left:34px}
-.tlist{flex:1;overflow:auto}
-.titem{display:flex;gap:11px;padding:13px 14px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
-.titem:hover{background:var(--soft)}
-.titem.sel{background:var(--soft);box-shadow:inset 3px 0 0 var(--brand)}
-.titem .grow{flex:1;min-width:0}
-.titem .l1{display:flex;justify-content:space-between;gap:8px}
-.titem .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.titem .tm{color:var(--faint);font-size:12px;white-space:nowrap}
-.titem .sj{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.titem .pv{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.titem .tags{display:flex;gap:6px;margin-top:6px;align-items:center}
-.titem.unread .nm,.titem.unread .sj{font-weight:800}
+        h2 {
+            font-size: 1.4rem;
+            margin-top: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
 
-.thread-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.thread-head .ttl{flex:1;min-width:200px}
-.thread-head h3{font-size:19px;line-height:1.25}
-.thread-head .meta{color:var(--muted);font-size:12.5px}
-.thread-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.thread-tools .select{width:auto;padding:6px 10px;font-size:13px;border-radius:8px}
-.msgs{flex:1;overflow:auto;padding:20px 18px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
-.msg{max-width:min(72%,560px);display:flex;flex-direction:column;gap:3px}
-.msg .bub{padding:9px 13px;border-radius:16px;white-space:pre-wrap;word-break:break-word}
-.msg.in{align-self:flex-start} .msg.in .bub{background:var(--bubble-in);border-bottom-left-radius:5px}
-.msg.out{align-self:flex-end;align-items:flex-end} .msg.out .bub{background:var(--bubble-out);color:var(--bubble-out-ink);border-bottom-right-radius:5px}
-.msg .by{font-size:11.5px;color:var(--faint);padding:0 6px}
-.msg.note{align-self:center;max-width:min(86%,620px);width:100%}
-.msg.note .bub{background:var(--note-bg);border:1px dashed var(--note-line);border-radius:12px;color:var(--ink)}
-.msg.note .by{align-self:flex-start}
-.sys{align-self:center;color:var(--faint);font-size:12.5px;padding:2px 10px;background:var(--soft);border-radius:999px}
-.composer{border-top:1px solid var(--line);padding:12px 16px 14px;background:var(--panel)}
-.composer .modes{display:flex;gap:6px;margin-bottom:8px;align-items:center}
-.composer .modes button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 12px;font-weight:600;font-size:13px;color:var(--muted)}
-.composer .modes button.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
-.composer .modes button.on.note{background:var(--note-bg);color:var(--ink);border-color:var(--note-line)}
-.composer .box{display:flex;gap:10px;align-items:flex-end;position:relative}
-.composer textarea{flex:1;min-height:44px;max-height:180px;resize:none;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);outline:none}
-.composer textarea:focus{border-color:var(--ink)}
-.composer.note-mode textarea{background:var(--note-bg);border-color:var(--note-line)}
-.canned-pop{position:absolute;left:0;right:56px;bottom:calc(100% + 8px);background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:240px;overflow:auto;z-index:20}
-.canned-pop .it{padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer}
-.canned-pop .it:last-child{border:0}
-.canned-pop .it:hover,.canned-pop .it.hl{background:var(--soft)}
-.canned-pop .it b{display:block;font-size:13.5px} .canned-pop .it span{color:var(--muted);font-size:12.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.no-thread{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);gap:8px;background:var(--bg);text-align:center;padding:24px}
-.no-thread h3{color:var(--ink)}
+        h3 {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
 
-.side{overflow:auto;padding:18px}
-.side .who{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-.side .who b{font-family:var(--serif);font-size:19px;font-weight:500}
-.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
-.kv span{color:var(--muted)} .kv b{font-weight:600;text-align:right;word-break:break-word}
-.side h4{margin:18px 0 6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
-.mini{display:flex;gap:8px;align-items:center;padding:7px 4px;border-radius:8px;cursor:pointer;font-size:13.5px}
-.mini:hover{background:var(--soft)} .mini .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .login-form {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+        }
 
-/* tables / forms */
-.table{width:100%;border-collapse:collapse}
-.table th{text-align:left;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);padding:8px 10px;border-bottom:1px solid var(--line)}
-.table td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-.toolbar .search{flex:1;min-width:220px;max-width:460px}
-.cust-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.cust{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer}
-.cust:hover{border-color:var(--ink)}
-.cust .grow{min-width:0;flex:1}.cust b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cust span{color:var(--muted);font-size:13px}
-.canned-item{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start}
-.canned-item .grow{flex:1;min-width:0}.canned-item p{margin:4px 0 0;color:var(--muted);white-space:pre-wrap}
-code.k{background:var(--soft);border-radius:6px;padding:1px 6px;font-size:12px}
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-/* modal / toast / spinner / skeleton */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:18px;z-index:200}
-.modal{width:100%;max-width:520px;max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
-.modal h3{font-size:22px;margin-bottom:14px}
-.modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
-.pick{max-height:200px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:6px}
-.pick .it{display:flex;gap:10px;align-items:center;padding:8px 10px;cursor:pointer;border-bottom:1px solid var(--line)}.pick .it:last-child{border:0}.pick .it:hover,.pick .it.on{background:var(--soft)}
-#toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:400}
-.toast{background:var(--brand);color:var(--brand-ink);padding:11px 16px;border-radius:12px;box-shadow:var(--shadow);max-width:340px;animation:tin .2s ease;cursor:pointer}
-.toast.err{background:var(--urgent);color:#fff}
-@keyframes tin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
-#spin{position:fixed;inset:0;background:rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;z-index:500}
-#spin i{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.sk{background:linear-gradient(90deg,var(--soft) 25%,var(--line) 50%,var(--soft) 75%);background-size:200% 100%;animation:sh 1.2s infinite;border-radius:10px}
-@keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
-.sk-row{display:flex;gap:11px;padding:14px}.sk-row .sk:first-child{width:36px;height:36px;border-radius:50%}.sk-row .col{flex:1;display:flex;flex-direction:column;gap:8px}.sk-row .col .sk{height:12px}
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
 
-.only-mobile{display:none}
-/* ---------- responsive ---------- */
-@media (max-width:1180px){
-  .inbox{grid-template-columns:330px minmax(0,1fr)}
-  .inbox .side-pane{display:none;position:fixed;inset:0 0 0 auto;width:min(340px,92vw);z-index:90;box-shadow:var(--shadow)}
-  .inbox.show-side .side-pane{display:flex}
-  .only-mobile{display:inline-flex}
-}
-@media (max-width:820px){
-  body{overflow:hidden}
-  #app{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
-  .rail{order:2;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line)}
-  .brand,.me .who,.me .sp{display:none}
-  .nav{flex-direction:row;justify-content:space-around;overflow:visible}
-  .nav a{flex-direction:column;gap:2px;font-size:11px;padding:6px 8px;position:relative}
-  .nav a span.lbl{display:block}
-  .nav .badge{position:absolute;top:0;right:2px;margin:0}
-  .me{border:0;margin:0;padding:0}
-  .main{order:1}
-  .page{padding:20px 16px 28px}.page-head h2{font-size:25px}
-  .inbox{grid-template-columns:1fr}
-  .inbox .list-pane,.inbox .thread-pane{grid-column:1;grid-row:1}
-  .inbox:not(.show-thread) .thread-pane{display:none}
-  .inbox.show-thread .list-pane{display:none}
-  .grid2{grid-template-columns:1fr}
-  .msg{max-width:88%}
-  #toasts{right:10px;left:10px;bottom:76px}
-}
-</style>
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button, .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover, .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f3ff;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            background: #f1f5f9;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 25px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 
-<!-- ============ SIGN IN ============ -->
-<div class="auth-wrap hidden" id="screen-login">
-  <div class="auth-card">
-    <div class="logo"><svg viewBox="0 0 24 24"><polygon points="3,11 21,3 14,21 11,13"/><polygon points="11,13 21,3 8,15" opacity=".55"/></svg></div>
-    <h1>Haba Support</h1>
-    <p class="sub">Sign in with your agent account to help Haba users.</p>
-    <div class="field"><label for="li-email">Email</label><input class="input" id="li-email" type="email" autocomplete="username" placeholder="you@habaapp.co.za"></div>
-    <div class="field"><label for="li-pass">Password</label><input class="input" id="li-pass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
-    <div class="err" id="li-err"></div>
-    <button class="btn primary block" id="li-btn">Sign in</button>
-    <p style="text-align:center;margin:14px 0 0"><button class="link" id="li-reset">Forgot password?</button></p>
-  </div>
-</div>
+    <div class="container">
+        <!-- The layout matches your active dashboard sections structurally -->
+        <h1>Haba Support</h1>
+        
+        <!-- Navigation Overview Bar -->
+        <nav>
+            <a href="#" class="active">Overview</a>
+            <a href="#">Inbox <span class="badge">0</span></a>
+            <a href="#">Customers</a>
+            <a href="#">Reports <span class="badge">0</span></a>
+            <a href="#">Replies</a>
+            <a href="#">Team</a>
+        </nav>
 
-<!-- ============ NO ACCESS ============ -->
-<div class="auth-wrap hidden" id="screen-denied">
-  <div class="auth-card">
-    <div class="logo"><svg viewBox="0 0 24 24"><polygon points="3,11 21,3 14,21 11,13"/></svg></div>
-    <h1>No agent access yet</h1>
-    <p class="sub">You’re signed in as <b id="dn-email"></b>, but this account isn’t on the support team. Send this ID to a Haba Support admin so they can add you:</p>
-    <div class="uidbox"><span id="dn-uid" style="flex:1"></span><button class="btn sm" id="dn-copy">Copy</button></div>
-    <button class="btn block" id="dn-out">Sign out</button>
-  </div>
-</div>
+        <!-- Auth Block State Sample (Hidden or visible depending on your backend logic) -->
+        <div class="login-form">
+            <h2>Sign in</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Sign in with your agent account to help Haba users.</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password">
+            </div>
+            <div class="flex-row">
+                <button>Sign in</button>
+                <a href="#" style="color: var(--primary); font-size: 0.9rem; text-decoration: none;">Forgot password?</a>
+            </div>
+        </div>
 
-<!-- ============ APP ============ -->
-<div id="app" class="hidden">
-  <aside class="rail">
-    <div class="brand"><div class="logo"><svg viewBox="0 0 24 24"><polygon points="3,11 21,3 14,21 11,13"/><polygon points="11,13 21,3 8,15" opacity=".55"/></svg></div><div><b>Haba</b><small>Support</small></div></div>
-    <nav class="nav" id="nav">
-      <a href="#overview" data-page="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="lbl">Overview</span></a>
-      <a href="#inbox" data-page="inbox"><svg viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1z"/></svg><span class="lbl">Inbox</span><span class="badge hidden" id="nav-badge">0</span></a>
-      <a href="#customers" data-page="customers"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="lbl">Customers</span></a>
-      <a href="#reports" data-page="reports"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span class="lbl">Reports</span><span class="badge hidden" id="nav-reports-badge">0</span></a>
-      <a href="#canned" data-page="canned"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="lbl">Replies</span></a>
-      <a href="#team" data-page="team"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="lbl">Team</span></a>
-    </nav>
-    <div class="me">
-      <span class="av sm" id="me-av"></span>
-      <div class="who"><b id="me-name"></b><span id="me-role"></span></div>
-      <button class="icon-btn" id="btn-out" title="Sign out"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+        <!-- No Access State Sample -->
+        <div class="card" style="margin-top: 20px; border-left: 4px solid #f59e0b;">
+            <h2>No agent access yet</h2>
+            <p>You're signed in, but this account isn't on the support team. Send this ID to a Haba Support admin so they can add you:</p>
+            <div class="flex-row" style="gap: 10px; justify-content: flex-start;">
+                <input type="text" value="USER_ID_HEX_SAMPLE" readonly style="max-width: 300px;">
+                <button class="btn-secondary">Copy</button>
+                <button class="btn-secondary" style="border-color: #ef4444; color: #ef4444;">Sign out</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content Grid -->
+        <h2>Overview</h2>
+        <div class="flex-row" style="margin-bottom: 20px;">
+            <h3>What needs the team's attention right now.</h3>
+            <button>New ticket</button>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Waiting on us</h3>
+                <p style="font-size: 2rem; font-weight: 700; margin: 10px 0;">0</p>
+            </div>
+            <div class="card">
+                <h3>New tickets · last 7 days</h3>
+                <p style="font-size: 2rem; font-weight: 700; margin: 10px 0;">0</p>
+            </div>
+            <div class="card">
+                <h3>Busiest topics</h3>
+                <p style="color: var(--text-muted);">No active data</p>
+            </div>
+        </div>
+
+        <h2>Inbox</h2>
+        <nav style="background: transparent; border-bottom: 1px solid var(--border); border-radius: 0; padding: 0 0 10px 0;">
+            <a href="#" class="active">New</a>
+            <a href="#">Open</a>
+            <a href="#">Waiting</a>
+            <a href="#">Resolved</a>
+            <a href="#">All</a>
+        </nav>
+
+        <h2>Customers</h2>
+        <div class="form-group">
+            <input type="text" placeholder="Find a Haba user by name, @username, phone number or ID.">
+        </div>
+
+        <h2>Reports</h2>
+        <p style="color: var(--text-muted);">Posts and messages that users have reported.</p>
+
+        <h2>Saved replies</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Type <code>/</code> in the inbox composer to use these. Use <code>{{name}}</code> for the customer's first name and <code>{{agent}}</code> for yours.</p>
+        <button class="btn-secondary" style="margin-bottom: 20px;">New reply</button>
+
+        <h2>Team</h2>
+        <div class="flex-row" style="margin-bottom: 20px;">
+            <h3>People who can use this dashboard.</h3>
+            <button>Add agent</button>
+        </div>
     </div>
-  </aside>
 
-  <main class="main">
-    <!-- Overview -->
-    <section class="page" id="page-overview">
-      <div class="page-head"><div><h2 id="ov-greet">Overview</h2><p>What needs the team’s attention right now.</p></div><button class="btn primary" data-act="new-ticket"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New ticket</button></div>
-      <div class="stats" id="ov-stats"></div>
-      <div class="grid2">
-        <div class="card"><h3>Waiting on us</h3><div id="ov-wait"></div></div>
-        <div>
-          <div class="card"><h3>New tickets · last 7 days</h3><div class="bars" id="ov-bars"></div><div style="height:10px"></div></div>
-          <div class="card"><h3>Busiest topics</h3><div id="ov-cats"></div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Inbox -->
-    <section class="page flex" id="page-inbox">
-      <div class="inbox" id="inbox">
-        <div class="pane list-pane">
-          <div class="list-head">
-            <div class="top"><h2>Inbox</h2><button class="btn sm primary" data-act="new-ticket">New</button></div>
-            <div class="tabs" id="f-status"><button data-v="open" class="on">Open</button><button data-v="pending">Waiting</button><button data-v="resolved">Resolved</button><button data-v="all">All</button></div>
-            <div class="tabs" id="f-scope"><button data-v="all" class="on">Everyone</button><button data-v="mine">Mine</button><button data-v="unassigned">Unassigned</button></div>
-            <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="input" id="f-search" placeholder="Search name, subject, message…"></div>
-          </div>
-          <div class="tlist" id="tlist"></div>
-        </div>
-        <div class="pane thread-pane" id="thread-pane"></div>
-        <div class="pane side-pane side" id="side-pane"></div>
-      </div>
-    </section>
-
-    <!-- Customers -->
-    <section class="page" id="page-customers">
-      <div class="page-head"><div><h2>Customers</h2><p>Find a Haba user by name, @username, phone number or ID.</p></div></div>
-      <div class="toolbar"><div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="input" id="cu-search" placeholder="Search customers…"></div></div>
-      <div id="cu-results"></div>
-    </section>
-
-    <!-- Reports -->
-    <section class="page" id="page-reports">
-      <div class="page-head"><div><h2>Reports</h2><p>Posts and messages that users have reported.</p></div></div>
-      <div class="toolbar"><div class="tabs" id="rp-filter" style="min-width:320px"><button data-v="pending" class="on">Pending</button><button data-v="reviewing">Reviewing</button><button data-v="resolved">Resolved</button><button data-v="all">All</button></div></div>
-      <div id="rp-list"></div>
-    </section>
-
-    <!-- Canned replies -->
-    <section class="page" id="page-canned">
-      <div class="page-head"><div><h2>Saved replies</h2><p>Type <code class="k">/</code> in the inbox composer to use these. Use <code class="k">{{name}}</code> for the customer’s first name and <code class="k">{{agent}}</code> for yours.</p></div><button class="btn primary" data-act="canned-new">New reply</button></div>
-      <div id="cn-list"></div>
-    </section>
-
-    <!-- Team -->
-    <section class="page" id="page-team">
-      <div class="page-head"><div><h2>Team</h2><p>People who can use this dashboard.</p></div><button class="btn primary hidden" id="tm-add" data-act="agent-new">Add agent</button></div>
-      <div class="card" style="padding-bottom:12px"><table class="table"><thead><tr><th>Agent</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody id="tm-body"></tbody></table></div>
-    </section>
-  </main>
-</div>
-
-<div id="toasts"></div>
-<div id="spin" class="hidden"><i></i></div>
-<div id="modal-root"></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getDatabase, ref, onValue, get, set, update, push, remove, query, orderByChild, limitToLast, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-const app = initializeApp({
-  apiKey: "AIzaSyBQSPwpVbGrdCuOoyitAeWQHIeipj2MgIY",
-  authDomain: "newstart-64c43.firebaseapp.com",
-  databaseURL: "https://newstart-64c43-default-rtdb.firebaseio.com",
-  projectId: "newstart-64c43",
-  storageBucket: "newstart-64c43.firebasestorage.app",
-  messagingSenderId: "941619830061",
-  appId: "1:941619830061:web:de9e0f791eb8f6eacf87a4"
-});
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-/* ---------------- helpers ---------------- */
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-const CATEGORIES = ['Account & login','Payments & coins','Verified badge','Rides','Messaging','Report abuse','Bug report','Other'];
-const PRIORITIES = ['low','normal','high','urgent'];
-const STATUS_LABEL = { open:'Open', pending:'Waiting on customer', resolved:'Resolved' };
-const ICON_ARROW = '<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>';
-
-function ago(ts) {
-  if (!ts) return '';
-  const s = Math.max(1, Math.round((Date.now() - ts) / 1000));
-  if (s < 60) return 'now';
-  const m = Math.round(s / 60); if (m < 60) return m + 'm';
-  const h = Math.round(m / 60); if (h < 24) return h + 'h';
-  const d = Math.round(h / 24); if (d < 7) return d + 'd';
-  return new Date(ts).toLocaleDateString(undefined, { day:'numeric', month:'short' });
-}
-const full = (ts) => ts ? new Date(ts).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
-const dur = (ms) => { const m = Math.round(ms / 60000); if (m < 60) return m + ' min'; const h = m / 60; return h < 24 ? h.toFixed(h < 10 ? 1 : 0) + ' h' : (h / 24).toFixed(1) + ' d'; };
-const initials = (n) => String(n || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?';
-function avatar(name, url, cls = '') {
-  return url ? `<span class="av ${cls}" style="background-image:url('${esc(url)}')"></span>` : `<span class="av ${cls}">${esc(initials(name))}</span>`;
-}
-function toast(msg, type = '') {
-  const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg;
-  t.onclick = () => t.remove(); $('#toasts').appendChild(t); setTimeout(() => t.remove(), type ? 6500 : 3200);
-}
-async function busy(promise) {
-  $('#spin').classList.remove('hidden');
-  try { return await promise; }
-  catch (e) { console.error(e); toast(friendlyError(e), 'err'); throw e; }
-  finally { $('#spin').classList.add('hidden'); }
-}
-function friendlyError(e) {
-  const m = String((e && e.message) || e);
-  if (/permission_denied/i.test(m)) return 'Permission denied — check that the support rules are published and your agent account is active.';
-  return m.replace(/^Firebase:\s*/, '');
-}
-function beep() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = 'sine'; o.frequency.value = 880; g.gain.value = .06;
-    o.connect(g); g.connect(ctx.destination); o.start();
-    g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + .25); o.stop(ctx.currentTime + .26);
-  } catch (_) {}
-}
-function skeleton(n = 6) {
-  return Array.from({ length: n }, () => `<div class="sk-row"><div class="sk"></div><div class="col"><div class="sk" style="width:55%"></div><div class="sk" style="width:85%"></div></div></div>`).join('');
-}
-function openModal(html, onMount) {
-  const root = $('#modal-root');
-  root.innerHTML = `<div class="modal-bg"><div class="modal">${html}</div></div>`;
-  const bg = $('.modal-bg', root);
-  bg.addEventListener('mousedown', (e) => { if (e.target === bg) closeModal(); });
-  if (onMount) onMount($('.modal', root));
-}
-function closeModal() { $('#modal-root').innerHTML = ''; }
-function confirmBox(title, text, okLabel = 'Confirm') {
-  return new Promise(res => {
-    openModal(`<h3>${esc(title)}</h3><p style="color:var(--muted);margin:0">${esc(text)}</p><div class="actions"><button class="btn" id="cb-no">Cancel</button><button class="btn primary" id="cb-yes">${esc(okLabel)}</button></div>`, m => {
-      $('#cb-no', m).onclick = () => { closeModal(); res(false); };
-      $('#cb-yes', m).onclick = () => { closeModal(); res(true); };
-    });
-  });
-}
-
-/* ---------------- state ---------------- */
-const S = {
-  me: null,            // { uid, name, role, email }
-  agents: {},          // uid -> agent
-  tickets: {},         // tid -> ticket
-  ticketsLoaded: false,
-  canned: {},
-  cannedLoaded: false,
-  usersCache: null,    // uid -> profile (lazy, loaded once)
-  profiles: {},        // uid -> profile (single fetches)
-  reports: null,
-  sel: null,           // selected ticket id
-  fStatus: 'open', fScope: 'all', fSearch: '',
-  composeMode: 'reply',
-  msgs: [], notes: [],
-  unsub: { msgs: null, notes: null }
-};
-const isAdmin = () => S.me && S.me.role === 'admin';
-const rootListeners = [];
-
-/* ---------------- auth ---------------- */
-function show(id) {
-  ['screen-login', 'screen-denied', 'app'].forEach(x => $('#' + x).classList.toggle('hidden', x !== id));
-}
-onAuthStateChanged(auth, async (user) => {
-  stopAll();
-  if (!user) { show('screen-login'); return; }
-  try {
-    const snap = await get(ref(db, 'support_agents/' + user.uid));
-    const a = snap.val();
-    if (!a || a.active !== true) {
-      $('#dn-email').textContent = user.email || user.phoneNumber || 'your account';
-      $('#dn-uid').textContent = user.uid;
-      show('screen-denied'); return;
-    }
-    S.me = { uid: user.uid, name: a.name || user.displayName || (user.email || 'Agent').split('@')[0], role: a.role === 'admin' ? 'admin' : 'agent', email: user.email || '' };
-    startApp();
-  } catch (e) {
-    console.error(e);
-    $('#dn-email').textContent = user.email || 'your account';
-    $('#dn-uid').textContent = user.uid;
-    show('screen-denied');
-    toast(friendlyError(e), 'err');
-  }
-});
-$('#li-btn').onclick = async () => {
-  const email = $('#li-email').value.trim(), pass = $('#li-pass').value;
-  $('#li-err').textContent = '';
-  if (!email || !pass) { $('#li-err').textContent = 'Enter your email and password.'; return; }
-  $('#li-btn').disabled = true;
-  try { await signInWithEmailAndPassword(auth, email, pass); }
-  catch (e) { $('#li-err').textContent = /invalid|wrong|user-not-found|credential/i.test(e.code + e.message) ? 'Email or password is incorrect.' : friendlyError(e); }
-  finally { $('#li-btn').disabled = false; }
-};
-$('#li-pass').addEventListener('keydown', e => { if (e.key === 'Enter') $('#li-btn').click(); });
-$('#li-reset').onclick = async () => {
-  const email = $('#li-email').value.trim();
-  if (!email) { $('#li-err').textContent = 'Type your email above first.'; return; }
-  try { await sendPasswordResetEmail(auth, email); $('#li-err').style.color = 'var(--resolved)'; $('#li-err').textContent = 'Password reset email sent.'; }
-  catch (e) { $('#li-err').style.color = ''; $('#li-err').textContent = friendlyError(e); }
-};
-$('#dn-out').onclick = () => signOut(auth);
-$('#btn-out').onclick = () => signOut(auth);
-$('#dn-copy').onclick = () => { navigator.clipboard.writeText($('#dn-uid').textContent); toast('ID copied'); };
-
-/* ---------------- boot ---------------- */
-function stopAll() {
-  rootListeners.splice(0).forEach(u => { try { u(); } catch (_) {} });
-  ['msgs', 'notes'].forEach(k => { if (S.unsub[k]) { S.unsub[k](); S.unsub[k] = null; } });
-  Object.assign(S, { tickets: {}, ticketsLoaded: false, canned: {}, cannedLoaded: false, agents: {}, reports: null, sel: null, me: null });
-}
-function startApp() {
-  show('app');
-  $('#me-name').textContent = S.me.name; $('#me-role').textContent = S.me.role;
-  $('#me-av').textContent = initials(S.me.name);
-  $('#tm-add').classList.toggle('hidden', !isAdmin());
-  $('#tlist').innerHTML = skeleton(7);
-
-  let first = true;
-  rootListeners.push(onValue(query(ref(db, 'support_tickets'), orderByChild('updatedAt'), limitToLast(500)), (snap) => {
-    const next = {};
-    snap.forEach(c => { next[c.key] = { id: c.key, ...c.val() }; });
-    if (!first) notifyIncoming(S.tickets, next);
-    S.tickets = next; S.ticketsLoaded = true; first = false;
-    onTicketsChanged();
-  }, (e) => { console.error(e); toast(friendlyError(e), 'err'); $('#tlist').innerHTML = `<div class="empty">Couldn’t load tickets.<br>${esc(friendlyError(e))}</div>`; }));
-
-  rootListeners.push(onValue(ref(db, 'support_agents'), (snap) => { S.agents = snap.val() || {}; if (page() === 'team') renderTeam(); if (S.sel) renderThread(); }));
-  rootListeners.push(onValue(ref(db, 'support_canned'), (snap) => { S.canned = snap.val() || {}; S.cannedLoaded = true; if (page() === 'canned') renderCanned(); }));
-  rootListeners.push(onValue(query(ref(db, 'reports'), limitToLast(300)), (snap) => {
-    const arr = []; snap.forEach(c => arr.push({ id: c.key, ...c.val() }));
-    S.reports = arr.reverse(); updateReportsBadge(); if (page() === 'reports') renderReports();
-  }, () => { S.reports = []; }));
-  route();
-}
-function notifyIncoming(prev, next) {
-  let any = false;
-  Object.values(next).forEach(t => {
-    const p = prev[t.id];
-    const fresh = !p || (t.updatedAt || 0) > (p.updatedAt || 0);
-    if (!fresh || t.lastSender !== 'user') return;
-    const viewing = S.sel === t.id && page() === 'inbox' && !document.hidden;
-    if (viewing) return;
-    if (t.assigneeUid && t.assigneeUid !== S.me.uid) return;
-    any = true;
-    toast(`${t.userName || 'A customer'}: ${(t.lastMessage || 'New message').slice(0, 70)}`);
-  });
-  if (any) beep();
-}
-
-/* ---------------- router ---------------- */
-const page = () => (location.hash.replace('#', '').split('/')[0] || 'overview');
-function route() {
-  const parts = location.hash.replace('#', '').split('/');
-  const pg = ['overview','inbox','customers','reports','canned','team'].includes(parts[0]) ? parts[0] : 'overview';
-  $$('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + pg));
-  $$('#nav a').forEach(a => a.classList.toggle('active', a.dataset.page === pg));
-  if (pg === 'inbox') {
-    if (parts[1] && parts[1] !== S.sel) selectTicket(parts[1], true);
-    else if (!parts[1] && S.sel) { S.sel = null; detachThread(); }
-    renderInbox();
-  }
-  if (pg === 'overview') renderOverview();
-  if (pg === 'customers') renderCustomers();
-  if (pg === 'reports') renderReports();
-  if (pg === 'canned') renderCanned();
-  if (pg === 'team') renderTeam();
-  updateTitle();
-}
-window.addEventListener('hashchange', () => { if (S.me) route(); });
-function onTicketsChanged() {
-  updateNavBadge(); updateTitle();
-  const pg = page();
-  if (pg === 'overview') renderOverview();
-  if (pg === 'inbox') { renderTickets(); if (S.sel) { renderThreadHeaderOnly(); renderSide(); } }
-}
-function openCount() { return Object.values(S.tickets).filter(t => t.status === 'open' && (!t.assigneeUid || t.assigneeUid === S.me.uid)).length; }
-function updateNavBadge() {
-  const n = Object.values(S.tickets).filter(t => t.unreadForAgent && t.status !== 'resolved').length;
-  const b = $('#nav-badge'); b.textContent = n > 99 ? '99+' : n; b.classList.toggle('hidden', !n);
-}
-function updateReportsBadge() {
-  const n = (S.reports || []).filter(r => (r.status || 'pending') === 'pending').length;
-  const b = $('#nav-reports-badge'); b.textContent = n > 99 ? '99+' : n; b.classList.toggle('hidden', !n);
-}
-function updateTitle() {
-  const n = Object.values(S.tickets).filter(t => t.unreadForAgent && t.status !== 'resolved').length;
-  document.title = (n ? `(${n}) ` : '') + 'Haba Support';
-}
-
-/* ---------------- overview ---------------- */
-function renderOverview() {
-  if (!S.me) return;
-  const h = new Date().getHours();
-  $('#ov-greet').textContent = `${h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'}, ${S.me.name.split(' ')[0]}`;
-  if (!S.ticketsLoaded) { $('#ov-stats').innerHTML = Array.from({ length: 4 }, () => '<div class="stat"><div class="sk" style="height:60px"></div></div>').join(''); return; }
-  const all = Object.values(S.tickets);
-  const open = all.filter(t => t.status === 'open');
-  const waiting = all.filter(t => t.status === 'pending');
-  const unassigned = open.filter(t => !t.assigneeUid);
-  const startToday = new Date(); startToday.setHours(0, 0, 0, 0);
-  const resolvedToday = all.filter(t => t.status === 'resolved' && (t.resolvedAt || 0) >= startToday.getTime());
-  const weekAgo = Date.now() - 7 * 864e5;
-  const frs = all.filter(t => t.firstResponseAt && t.createdAt && t.createdAt >= weekAgo).map(t => t.firstResponseAt - t.createdAt);
-  const avgFr = frs.length ? dur(frs.reduce((a, b) => a + b, 0) / frs.length) : '—';
-  const rated = all.filter(t => typeof t.rating === 'number');
-  const csat = rated.length ? (rated.reduce((a, t) => a + t.rating, 0) / rated.length).toFixed(1) + ' / 5' : '—';
-  const card = (l, v, s = '') => `<div class="stat"><span>${l}</span><b>${v}</b><small>${s}</small></div>`;
-  $('#ov-stats').innerHTML =
-    card('Open', open.length, `${unassigned.length} unassigned`) +
-    card('Waiting on customer', waiting.length) +
-    card('Resolved today', resolvedToday.length) +
-    card('First reply (7 days)', avgFr, `${frs.length} ticket${frs.length === 1 ? '' : 's'}`) +
-    card('Satisfaction', csat, `${rated.length} rating${rated.length === 1 ? '' : 's'}`);
-
-  const needs = all.filter(t => t.status === 'open' && t.lastSender !== 'agent')
-    .sort((a, b) => (a.updatedAt || 0) - (b.updatedAt || 0)).slice(0, 8);
-  $('#ov-wait').innerHTML = needs.length ? needs.map(t => `
-    <div class="row" data-open="${t.id}">${avatar(t.userName, t.userPhoto)}
-      <div class="grow"><div class="t">${esc(t.userName || 'Customer')} · ${esc(t.subject || 'No subject')}</div><div class="s">${esc(t.lastMessage || '')}</div></div>
-      <span class="chip ${t.priority === 'urgent' || t.priority === 'high' ? t.priority : 'normal'}">${t.priority === 'urgent' || t.priority === 'high' ? esc(t.priority) : ago(t.updatedAt)}</span>
-    </div>`).join('') : '<div class="empty">You’re all caught up 🎉</div>';
-
-  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (6 - i)); return d; });
-  const counts = days.map(d => all.filter(t => t.createdAt >= d.getTime() && t.createdAt < d.getTime() + 864e5).length);
-  const max = Math.max(1, ...counts);
-  $('#ov-bars').innerHTML = days.map((d, i) => `<div class="b"><strong>${counts[i]}</strong><i style="height:${Math.max(3, counts[i] / max * 78)}%"></i><em>${d.toLocaleDateString(undefined, { weekday: 'short' })}</em></div>`).join('');
-
-  const catCount = {}; all.filter(t => t.createdAt >= weekAgo).forEach(t => { const c = t.category || 'Other'; catCount[c] = (catCount[c] || 0) + 1; });
-  const top = Object.entries(catCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  $('#ov-cats').innerHTML = top.length ? top.map(([c, n]) => `<div class="row" style="cursor:default"><div class="grow t">${esc(c)}</div><span class="chip normal">${n}</span></div>`).join('') : '<div class="empty">No tickets this week yet.</div>';
-}
-$('#page-overview').addEventListener('click', (e) => {
-  const r = e.target.closest('[data-open]'); if (r) location.hash = '#inbox/' + r.dataset.open;
-});
-
-/* ---------------- inbox: list ---------------- */
-function bindTabs(id, key, after) {
-  $('#' + id).addEventListener('click', (e) => {
-    const b = e.target.closest('button'); if (!b) return;
-    S[key] = b.dataset.v; $$('button', $('#' + id)).forEach(x => x.classList.toggle('on', x === b)); after();
-  });
-}
-bindTabs('f-status', 'fStatus', renderTickets);
-bindTabs('f-scope', 'fScope', renderTickets);
-$('#f-search').addEventListener('input', (e) => { S.fSearch = e.target.value.trim().toLowerCase(); renderTickets(); });
-function visibleTickets() {
-  let list = Object.values(S.tickets);
-  if (S.fStatus !== 'all') list = list.filter(t => t.status === S.fStatus);
-  if (S.fScope === 'mine') list = list.filter(t => t.assigneeUid === S.me.uid);
-  if (S.fScope === 'unassigned') list = list.filter(t => !t.assigneeUid);
-  if (S.fSearch) list = list.filter(t => [t.userName, t.subject, t.lastMessage, t.userPhone, t.id, t.category].some(v => String(v || '').toLowerCase().includes(S.fSearch)));
-  return list.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-}
-function renderInbox() { renderTickets(); if (S.sel) { renderThread(); } else renderNoThread(); renderSide(); syncInboxClasses(); }
-function renderTickets() {
-  const box = $('#tlist');
-  if (!S.ticketsLoaded) { box.innerHTML = skeleton(7); return; }
-  const list = visibleTickets();
-  if (!list.length) { box.innerHTML = `<div class="empty">${S.fSearch ? 'No tickets match your search.' : 'No tickets here.'}</div>`; return; }
-  box.innerHTML = list.map(t => `
-    <div class="titem ${t.id === S.sel ? 'sel' : ''} ${t.unreadForAgent ? 'unread' : ''}" data-id="${t.id}">
-      ${avatar(t.userName, t.userPhoto)}
-      <div class="grow">
-        <div class="l1"><span class="nm">${esc(t.userName || 'Customer')}</span><span class="tm">${ago(t.updatedAt)}</span></div>
-        <div class="sj">${esc(t.subject || 'No subject')}</div>
-        <div class="pv">${t.lastSender === 'agent' ? 'You: ' : ''}${esc(t.lastMessage || '')}</div>
-        <div class="tags">
-          <span class="chip ${t.status}">${esc(STATUS_LABEL[t.status] || t.status)}</span>
-          ${t.priority === 'urgent' || t.priority === 'high' ? `<span class="chip ${t.priority}">${esc(t.priority)}</span>` : ''}
-          ${t.assigneeName ? `<span class="chip normal">${esc(t.assigneeName.split(' ')[0])}</span>` : '<span class="chip normal">Unassigned</span>'}
-          ${t.unreadForAgent ? '<span class="dot" style="margin-left:auto"></span>' : ''}
-        </div>
-      </div>
-    </div>`).join('');
-}
-$('#tlist').addEventListener('click', (e) => { const it = e.target.closest('.titem'); if (it) location.hash = '#inbox/' + it.dataset.id; });
-function syncInboxClasses() { $('#inbox').classList.toggle('show-thread', !!S.sel); }
-
-/* ---------------- inbox: thread ---------------- */
-function detachThread() {
-  ['msgs', 'notes'].forEach(k => { if (S.unsub[k]) { S.unsub[k](); S.unsub[k] = null; } });
-  S.msgs = []; S.notes = [];
-}
-function selectTicket(id, fromRoute) {
-  if (S.sel === id && fromRoute) return;
-  detachThread();
-  S.sel = id; S.composeMode = 'reply';
-  S.unsub.msgs = onValue(ref(db, 'support_messages/' + id), (snap) => {
-    S.msgs = []; snap.forEach(c => S.msgs.push({ id: c.key, kind: 'msg', ...c.val() }));
-    renderMessages(true);
-  }, (e) => toast(friendlyError(e), 'err'));
-  S.unsub.notes = onValue(ref(db, 'support_notes/' + id), (snap) => {
-    S.notes = []; snap.forEach(c => S.notes.push({ id: c.key, kind: 'note', ...c.val() }));
-    renderMessages(false);
-  }, () => {});
-  const t = S.tickets[id];
-  if (t && t.unreadForAgent) update(ref(db, 'support_tickets/' + id), { unreadForAgent: 0 }).catch(() => {});
-  ensureProfile(t && t.uid).then(() => { if (S.sel === id) renderSide(); });
-  renderInbox();
-}
-function renderNoThread() {
-  $('#thread-pane').innerHTML = `<div class="no-thread"><svg viewBox="0 0 24 24" style="width:42px;height:42px;color:var(--faint)"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><h3>Select a conversation</h3><span>Pick a ticket on the left, or start one for a customer.</span></div>`;
-}
-function agentOptions(sel) {
-  const entries = Object.entries(S.agents).filter(([, a]) => a && a.active);
-  return `<option value="">Unassigned</option>` + entries.map(([uid, a]) => `<option value="${uid}" ${uid === sel ? 'selected' : ''}>${esc(a.name || uid)}</option>`).join('');
-}
-function threadHeadHtml(t) {
-  return `
-    <div class="thread-head">
-      <button class="icon-btn only-mobile" data-act="back" style="display:none" title="Back">${ICON_ARROW}</button>
-      ${avatar(t.userName, t.userPhoto)}
-      <div class="ttl"><h3>${esc(t.subject || 'No subject')}</h3><div class="meta">${esc(t.userName || 'Customer')} · ${esc(t.category || 'Other')} · opened ${full(t.createdAt)} #${esc(t.id.slice(-5))}</div></div>
-      <div class="thread-tools">
-        <select class="select" data-f="assignee" title="Assignee">${agentOptions(t.assigneeUid)}</select>
-        <select class="select" data-f="priority" title="Priority">${PRIORITIES.map(p => `<option ${p === (t.priority || 'normal') ? 'selected' : ''}>${p}</option>`).join('')}</select>
-        ${t.status === 'resolved'
-          ? `<button class="btn sm" data-act="reopen">Reopen</button>`
-          : `<button class="btn sm primary" data-act="resolve">Resolve</button>`}
-        <button class="icon-btn only-mobile" data-act="side" title="Customer details"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
-      </div>
-    </div>`;
-}
-function renderThread() {
-  const t = S.tickets[S.sel];
-  const pane = $('#thread-pane');
-  if (!t) { pane.innerHTML = `<div class="no-thread"><h3>Ticket not found</h3><span>It may have been removed.</span></div>`; return; }
-  pane.innerHTML = threadHeadHtml(t) + `
-    <div class="msgs" id="msgs">${skeleton(3)}</div>
-    <div class="composer ${S.composeMode === 'note' ? 'note-mode' : ''}" id="composer">
-      <div class="modes">
-        <button data-mode="reply" class="${S.composeMode === 'reply' ? 'on' : ''}">Reply to customer</button>
-        <button data-mode="note" class="note ${S.composeMode === 'note' ? 'on' : ''}">Internal note</button>
-        <span style="margin-left:auto;color:var(--faint);font-size:12px" class="hide-sm">Type / for saved replies · Ctrl+Enter to send</span>
-      </div>
-      <div class="box">
-        <div class="canned-pop hidden" id="canned-pop"></div>
-        <textarea id="c-text" rows="1" placeholder="${S.composeMode === 'note' ? 'Only your team can see this note…' : 'Write a reply…'}"></textarea>
-        <button class="btn primary" data-act="send" title="Send"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-      </div>
-    </div>`;
-  const back = $('[data-act="back"]', pane); if (back && matchMedia('(max-width:820px)').matches) back.style.display = '';
-  renderMessages(true);
-  const ta = $('#c-text'); if (ta && !matchMedia('(pointer:coarse)').matches) ta.focus();
-}
-function renderThreadHeaderOnly() {
-  const t = S.tickets[S.sel]; const head = $('#thread-pane .thread-head');
-  if (!t || !head) return;
-  const wrap = document.createElement('div'); wrap.innerHTML = threadHeadHtml(t);
-  const nh = wrap.firstElementChild;
-  const back = $('[data-act="back"]', nh); if (back && matchMedia('(max-width:820px)').matches) back.style.display = '';
-  head.replaceWith(nh);
-}
-function renderMessages(scroll) {
-  const box = $('#msgs'); if (!box) return;
-  const t = S.tickets[S.sel];
-  const items = [...S.msgs, ...S.notes].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-  const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 140;
-  if (!items.length) { box.innerHTML = '<div class="empty">No messages yet.</div>'; return; }
-  box.innerHTML = items.map(m => {
-    if (m.kind === 'note') return `<div class="msg note"><span class="by">🔒 Internal note · ${esc(m.senderName || 'Agent')} · ${full(m.createdAt)}</span><div class="bub">${esc(m.text)}</div></div>`;
-    if (m.sender === 'system') return `<div class="sys">${esc(m.text)} · ${full(m.createdAt)}</div>`;
-    const out = m.sender === 'agent';
-    const who = out ? (m.senderName || 'Agent') : (t ? t.userName || 'Customer' : 'Customer');
-    return `<div class="msg ${out ? 'out' : 'in'}"><div class="bub">${esc(m.text)}</div><span class="by">${esc(who)}${m.via === 'agent' ? ' (logged by agent)' : ''} · ${full(m.createdAt)}</span></div>`;
-  }).join('');
-  if (scroll || nearBottom) box.scrollTop = box.scrollHeight;
-}
-$('#thread-pane').addEventListener('click', async (e) => {
-  const mode = e.target.closest('[data-mode]');
-  if (mode) { S.composeMode = mode.dataset.mode; const txt = $('#c-text').value; renderThread(); $('#c-text').value = txt; return; }
-  const act = e.target.closest('[data-act]'); if (!act) return;
-  const a = act.dataset.act;
-  if (a === 'back') { location.hash = '#inbox'; }
-  if (a === 'side') { $('#inbox').classList.toggle('show-side'); }
-  if (a === 'send') sendMessage();
-  if (a === 'resolve') setStatus('resolved');
-  if (a === 'reopen') setStatus('open');
-});
-$('#thread-pane').addEventListener('change', async (e) => {
-  const f = e.target.dataset.f; if (!f) return;
-  const t = S.tickets[S.sel]; if (!t) return;
-  if (f === 'priority') await busy(update(ref(db, 'support_tickets/' + t.id), { priority: e.target.value }));
-  if (f === 'assignee') {
-    const uid = e.target.value || null; const ag = uid ? S.agents[uid] : null;
-    await busy(update(ref(db), {
-      [`support_tickets/${t.id}/assigneeUid`]: uid, [`support_tickets/${t.id}/assigneeName`]: ag ? ag.name : null,
-      [`support_messages/${t.id}/${push(ref(db, 'support_messages/' + t.id)).key}`]: { sender: 'system', text: uid ? `Assigned to ${ag ? ag.name : 'an agent'} by ${S.me.name}` : `Unassigned by ${S.me.name}`, createdAt: serverTimestamp() }
-    }));
-  }
-});
-$('#thread-pane').addEventListener('input', (e) => {
-  if (e.target.id !== 'c-text') return;
-  const ta = e.target; ta.style.height = 'auto'; ta.style.height = Math.min(180, ta.scrollHeight) + 'px';
-  updateCannedPop();
-});
-$('#thread-pane').addEventListener('keydown', (e) => {
-  if (e.target.id !== 'c-text') return;
-  const pop = $('#canned-pop');
-  if (pop && !pop.classList.contains('hidden')) {
-    const its = $$('.it', pop); let i = its.findIndex(x => x.classList.contains('hl'));
-    if (e.key === 'ArrowDown') { e.preventDefault(); its[i]?.classList.remove('hl'); its[(i + 1) % its.length].classList.add('hl'); return; }
-    if (e.key === 'ArrowUp') { e.preventDefault(); its[i]?.classList.remove('hl'); its[(i - 1 + its.length) % its.length].classList.add('hl'); return; }
-    if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); (its[i] || its[0]).click(); return; }
-    if (e.key === 'Escape') { pop.classList.add('hidden'); return; }
-  }
-  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendMessage(); }
-});
-function fillTemplate(txt) {
-  const t = S.tickets[S.sel]; const first = String((t && t.userName) || 'there').split(' ')[0];
-  return String(txt).replace(/\{\{\s*name\s*\}\}/gi, first).replace(/\{\{\s*agent\s*\}\}/gi, S.me.name.split(' ')[0]);
-}
-function updateCannedPop() {
-  const ta = $('#c-text'), pop = $('#canned-pop'); if (!ta || !pop) return;
-  const m = ta.value.match(/^\/(\S*)$/);
-  if (!m) { pop.classList.add('hidden'); return; }
-  const q = m[1].toLowerCase();
-  const list = Object.entries(S.canned).map(([id, c]) => ({ id, ...c }))
-    .filter(c => !q || String(c.shortcut || '').toLowerCase().includes(q) || String(c.title || '').toLowerCase().includes(q)).slice(0, 8);
-  if (!list.length) { pop.innerHTML = `<div class="it"><b>No saved replies</b><span>Add some on the Replies page.</span></div>`; pop.classList.remove('hidden'); return; }
-  pop.innerHTML = list.map((c, i) => `<div class="it ${i === 0 ? 'hl' : ''}" data-cid="${c.id}"><b>${esc(c.title)}${c.shortcut ? ` <code class="k">/${esc(c.shortcut)}</code>` : ''}</b><span>${esc(c.text)}</span></div>`).join('');
-  pop.classList.remove('hidden');
-  $$('.it', pop).forEach(it => it.onclick = () => {
-    const c = S.canned[it.dataset.cid]; if (!c) return;
-    ta.value = fillTemplate(c.text); pop.classList.add('hidden'); ta.focus(); ta.dispatchEvent(new Event('input'));
-  });
-}
-async function sendMessage() {
-  const t = S.tickets[S.sel], ta = $('#c-text'); if (!t || !ta) return;
-  const text = ta.value.trim(); if (!text) return;
-  const note = S.composeMode === 'note';
-  const node = note ? 'support_notes' : 'support_messages';
-  const mid = push(ref(db, `${node}/${t.id}`)).key;
-  const up = {};
-  up[`${node}/${t.id}/${mid}`] = note
-    ? { text, createdAt: serverTimestamp(), senderUid: S.me.uid, senderName: S.me.name }
-    : { text, sender: 'agent', createdAt: serverTimestamp(), senderUid: S.me.uid, senderName: S.me.name };
-  if (!note) {
-    up[`support_tickets/${t.id}/lastMessage`] = text.slice(0, 140);
-    up[`support_tickets/${t.id}/lastSender`] = 'agent';
-    up[`support_tickets/${t.id}/updatedAt`] = serverTimestamp();
-    up[`support_tickets/${t.id}/unreadForUser`] = increment(1);
-    up[`support_tickets/${t.id}/unreadForAgent`] = 0;
-    if (!t.firstResponseAt) up[`support_tickets/${t.id}/firstResponseAt`] = serverTimestamp();
-    if (t.status !== 'pending') { up[`support_tickets/${t.id}/status`] = 'pending'; up[`support_tickets/${t.id}/resolvedAt`] = null; }
-    if (!t.assigneeUid) { up[`support_tickets/${t.id}/assigneeUid`] = S.me.uid; up[`support_tickets/${t.id}/assigneeName`] = S.me.name; }
-  }
-  ta.value = ''; ta.style.height = 'auto'; $('#canned-pop')?.classList.add('hidden');
-  try { await update(ref(db), up); }
-  catch (e) { ta.value = text; toast(friendlyError(e), 'err'); }
-}
-async function setStatus(status) {
-  const t = S.tickets[S.sel]; if (!t) return;
-  const up = {
-    [`support_tickets/${t.id}/status`]: status,
-    [`support_tickets/${t.id}/updatedAt`]: serverTimestamp(),
-    [`support_tickets/${t.id}/resolvedAt`]: status === 'resolved' ? serverTimestamp() : null,
-    [`support_messages/${t.id}/${push(ref(db, 'support_messages/' + t.id)).key}`]: { sender: 'system', text: status === 'resolved' ? `Marked as resolved by ${S.me.name}` : `Reopened by ${S.me.name}`, createdAt: serverTimestamp() }
-  };
-  if (status === 'resolved') { up[`support_tickets/${t.id}/unreadForUser`] = increment(1); if (!t.assigneeUid) { up[`support_tickets/${t.id}/assigneeUid`] = S.me.uid; up[`support_tickets/${t.id}/assigneeName`] = S.me.name; } }
-  await busy(update(ref(db), up));
-  toast(status === 'resolved' ? 'Ticket resolved' : 'Ticket reopened');
-}
-
-/* ---------------- inbox: customer side panel ---------------- */
-async function ensureProfile(uid) {
-  if (!uid || S.profiles[uid] !== undefined) return S.profiles[uid];
-  try { const s = await get(ref(db, 'users/' + uid)); S.profiles[uid] = s.val() || null; }
-  catch (_) { S.profiles[uid] = null; }
-  return S.profiles[uid];
-}
-function profileRows(p, uid) {
-  const rows = [];
-  const add = (k, v) => { if (v !== undefined && v !== null && v !== '') rows.push(`<div class="kv"><span>${k}</span><b>${v}</b></div>`); };
-  add('Phone', esc(p.phoneNumber || p.phone || ''));
-  add('Username', p.username ? '@' + esc(p.username) : '');
-  add('Account', p.isBusinessAccount ? 'Business' : 'Personal');
-  add('Verified', (p.paidVerifiedAt || p.streakVerifiedAt || p.verified) ? 'Yes' : 'No');
-  add('Followers', p.followersCount != null ? esc(p.followersCount) : '');
-  add('Coins', p.coinBalance != null ? esc(p.coinBalance) : '');
-  const joined = p.createdAt || p.joinedAt || p.creationTime; if (joined) add('Joined', esc(new Date(joined).toLocaleDateString()));
-  rows.push(`<div class="kv"><span>User ID</span><b style="font-size:11.5px;font-family:ui-monospace,Menlo,monospace">${esc(uid)}</b></div>`);
-  return rows.join('');
-}
-function renderSide() {
-  const pane = $('#side-pane'); if (!pane) return;
-  const t = S.tickets[S.sel];
-  if (!t) { pane.innerHTML = `<div class="empty">Customer details appear here.</div>`; return; }
-  const p = S.profiles[t.uid];
-  const others = Object.values(S.tickets).filter(x => x.uid === t.uid && x.id !== t.id).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 6);
-  pane.innerHTML = `
-    <button class="icon-btn only-mobile" data-act="close-side" style="margin:-6px 0 6px -8px">${ICON_ARROW}</button>
-    <div class="who">${avatar((p && p.name) || t.userName, (p && p.photoURL) || t.userPhoto, 'lg')}<b>${esc((p && p.name) || t.userName || 'Customer')}</b>
-      ${p ? '' : '<span style="color:var(--muted);font-size:12.5px">Profile not found</span>'}</div>
-    ${p ? profileRows(p, t.uid) : `<div class="kv"><span>User ID</span><b style="font-size:11.5px;font-family:ui-monospace,Menlo,monospace">${esc(t.uid)}</b></div>`}
-    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn sm" data-act="copy-uid" style="flex:1">Copy ID</button><button class="btn sm" data-act="cust-open" style="flex:1">All tickets</button></div>
-    <h4>Ticket</h4>
-    <div class="kv"><span>Status</span><b><span class="chip ${t.status}">${esc(STATUS_LABEL[t.status] || t.status)}</span></b></div>
-    <div class="kv"><span>Category</span><b>${esc(t.category || 'Other')}</b></div>
-    <div class="kv"><span>Opened</span><b>${full(t.createdAt)}</b></div>
-    ${t.firstResponseAt ? `<div class="kv"><span>First reply</span><b>${dur(t.firstResponseAt - t.createdAt)}</b></div>` : ''}
-    ${typeof t.rating === 'number' ? `<div class="kv"><span>Rating</span><b>${'★'.repeat(t.rating)}${'☆'.repeat(5 - t.rating)}</b></div>` : ''}
-    <h4>Other tickets</h4>
-    ${others.length ? others.map(o => `<div class="mini" data-open="${o.id}"><span class="nm">${esc(o.subject || 'No subject')}</span><span class="chip ${o.status}">${esc(o.status)}</span></div>`).join('') : '<div style="color:var(--muted);font-size:13px">No other tickets.</div>'}`;
-}
-$('#side-pane').addEventListener('click', (e) => {
-  const o = e.target.closest('[data-open]'); if (o) { location.hash = '#inbox/' + o.dataset.open; return; }
-  const a = e.target.closest('[data-act]'); if (!a) return;
-  const t = S.tickets[S.sel]; if (!t) return;
-  if (a.dataset.act === 'close-side') $('#inbox').classList.remove('show-side');
-  if (a.dataset.act === 'copy-uid') { navigator.clipboard.writeText(t.uid); toast('ID copied'); }
-  if (a.dataset.act === 'cust-open') openCustomer(t.uid);
-});
-
-/* ---------------- new ticket ---------------- */
-async function loadAllUsers() {
-  if (S.usersCache) return S.usersCache;
-  const snap = await get(ref(db, 'users'));
-  S.usersCache = snap.val() || {};
-  return S.usersCache;
-}
-function matchUsers(q, limit = 40) {
-  const users = S.usersCache || {}; q = q.trim().toLowerCase(); if (!q) return [];
-  const digits = q.replace(/\D/g, '');
-  const out = [];
-  for (const [uid, u] of Object.entries(users)) {
-    if (!u) continue;
-    const ph = String(u.phoneNumber || u.phone || '').replace(/\D/g, '');
-    if (uid.toLowerCase() === q || String(u.name || '').toLowerCase().includes(q) || String(u.username || '').toLowerCase().includes(q.replace(/^@/, '')) || (digits.length >= 4 && ph.includes(digits))) {
-      out.push({ uid, ...u }); if (out.length >= limit) break;
-    }
-  }
-  return out;
-}
-function newTicketModal(prefUid) {
-  let chosen = null;
-  openModal(`
-    <h3>New ticket</h3>
-    <div class="field"><label>Customer</label><input class="input" id="nt-q" placeholder="Search name, @username, phone or ID…"><div class="pick" id="nt-pick"><div class="empty" style="padding:14px">Type to search customers.</div></div></div>
-    <div class="field"><label>Subject</label><input class="input" id="nt-sub" placeholder="What do they need help with?"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="field"><label>Category</label><select class="select" id="nt-cat">${CATEGORIES.map(c => `<option>${esc(c)}</option>`).join('')}</select></div>
-      <div class="field"><label>Priority</label><select class="select" id="nt-pri">${PRIORITIES.map(p => `<option ${p === 'normal' ? 'selected' : ''}>${p}</option>`).join('')}</select></div>
-    </div>
-    <div class="field"><label>What the customer said (call, WhatsApp, email…)</label><textarea class="textarea" id="nt-msg" placeholder="Summarise the issue as the customer described it."></textarea></div>
-    <div class="actions"><button class="btn" id="nt-cancel">Cancel</button><button class="btn primary" id="nt-go">Create ticket</button></div>
-  `, async (m) => {
-    const pick = $('#nt-pick', m);
-    const draw = (list) => {
-      pick.innerHTML = list.length ? list.map(u => `<div class="it ${chosen && chosen.uid === u.uid ? 'on' : ''}" data-uid="${u.uid}">${avatar(u.name, u.photoURL, 'sm')}<div><b>${esc(u.name || 'User')}</b><div style="color:var(--muted);font-size:12.5px">${esc(u.username ? '@' + u.username : '')} ${esc(u.phoneNumber || '')}</div></div></div>`).join('') : '<div class="empty" style="padding:14px">No customers found.</div>';
-    };
-    pick.onclick = (e) => {
-      const it = e.target.closest('.it'); if (!it) return;
-      chosen = { uid: it.dataset.uid, ...(S.usersCache[it.dataset.uid] || {}) };
-      $$('.it', pick).forEach(x => x.classList.toggle('on', x === it));
-    };
-    $('#nt-q', m).addEventListener('input', async (e) => { await loadAllUsers().catch(() => {}); draw(matchUsers(e.target.value)); });
-    $('#nt-cancel', m).onclick = closeModal;
-    $('#nt-go', m).onclick = async () => {
-      const subject = $('#nt-sub', m).value.trim(), msg = $('#nt-msg', m).value.trim();
-      if (!chosen) return toast('Choose a customer first', 'err');
-      if (!subject) return toast('Add a subject', 'err');
-      closeModal();
-      const tid = push(ref(db, 'support_tickets')).key;
-      const up = {};
-      up[`support_tickets/${tid}`] = {
-        uid: chosen.uid, userName: chosen.name || 'Customer', userPhoto: chosen.photoURL || '', userPhone: chosen.phoneNumber || '',
-        subject, category: $('#nt-cat', m).value, priority: $('#nt-pri', m).value, status: 'open', source: 'agent',
-        assigneeUid: S.me.uid, assigneeName: S.me.name, createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
-        lastMessage: (msg || subject).slice(0, 140), lastSender: msg ? 'user' : 'agent', unreadForAgent: 0, unreadForUser: 0
-      };
-      up[`support_user_tickets/${chosen.uid}/${tid}`] = true;
-      if (msg) up[`support_messages/${tid}/${push(ref(db, 'support_messages/' + tid)).key}`] = { text: msg, sender: 'user', senderUid: chosen.uid, via: 'agent', loggedBy: S.me.name, createdAt: serverTimestamp() };
-      await busy(update(ref(db), up));
-      toast('Ticket created'); location.hash = '#inbox/' + tid;
-    };
-    if (prefUid) {
-      await loadAllUsers().catch(() => {});
-      const u = (S.usersCache || {})[prefUid];
-      if (u) { chosen = { uid: prefUid, ...u }; $('#nt-q', m).value = u.name || prefUid; draw([chosen]); }
-    }
-  });
-}
-
-/* ---------------- customers ---------------- */
-let cuTimer = null;
-async function renderCustomers() {
-  const box = $('#cu-results');
-  if (!S.usersCache) {
-    box.innerHTML = `<div class="cust-grid">${Array.from({ length: 6 }, () => '<div class="cust"><span class="sk" style="width:36px;height:36px;border-radius:50%"></span><div class="grow"><div class="sk" style="height:12px;width:60%;margin-bottom:8px"></div><div class="sk" style="height:10px;width:40%"></div></div></div>').join('')}</div>`;
-    try { await loadAllUsers(); } catch (e) { box.innerHTML = `<div class="empty">Couldn’t load customers.<br>${esc(friendlyError(e))}</div>`; return; }
-  }
-  drawCustomers();
-}
-function drawCustomers() {
-  const q = $('#cu-search').value;
-  const box = $('#cu-results');
-  if (!q.trim()) { box.innerHTML = `<div class="empty">Search for a customer to see their profile and tickets.<br><small>${Object.keys(S.usersCache || {}).length.toLocaleString()} users on Haba</small></div>`; return; }
-  const list = matchUsers(q, 60);
-  box.innerHTML = list.length ? `<div class="cust-grid">${list.map(u => `<div class="cust" data-uid="${u.uid}">${avatar(u.name, u.photoURL)}<div class="grow"><b>${esc(u.name || 'User')}</b><span>${esc(u.username ? '@' + u.username : '')} ${esc(u.phoneNumber || '')}</span></div></div>`).join('')}</div>` : '<div class="empty">No customers found.</div>';
-}
-$('#cu-search').addEventListener('input', () => { clearTimeout(cuTimer); cuTimer = setTimeout(drawCustomers, 180); });
-$('#cu-results').addEventListener('click', (e) => { const c = e.target.closest('.cust'); if (c) openCustomer(c.dataset.uid); });
-async function openCustomer(uid) {
-  const p = await ensureProfile(uid);
-  const tix = Object.values(S.tickets).filter(t => t.uid === uid).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-  const isAgent = S.agents[uid] && S.agents[uid].active;
-  openModal(`
-    <div style="display:flex;gap:14px;align-items:center;margin-bottom:12px">${avatar(p && p.name, p && p.photoURL, 'lg')}<div><h3 style="margin:0">${esc((p && p.name) || 'Customer')}</h3><span style="color:var(--muted)">${esc(p && p.username ? '@' + p.username : '')}</span></div></div>
-    ${p ? profileRows(p, uid) : `<div class="empty">No profile found for this ID.</div>`}
-    <h4 style="margin:18px 0 6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Tickets (${tix.length})</h4>
-    ${tix.length ? tix.slice(0, 8).map(t => `<div class="mini" data-open="${t.id}"><span class="nm">${esc(t.subject || 'No subject')}</span><span class="chip ${t.status}">${esc(t.status)}</span></div>`).join('') : '<div style="color:var(--muted);font-size:13px">No tickets yet.</div>'}
-    <div class="actions" style="flex-wrap:wrap">
-      <button class="btn" id="cm-copy">Copy ID</button>
-      ${isAdmin() && !isAgent ? '<button class="btn" id="cm-agent">Make agent</button>' : ''}
-      <button class="btn primary" id="cm-new">New ticket</button>
-    </div>`, (m) => {
-    $('#cm-copy', m).onclick = () => { navigator.clipboard.writeText(uid); toast('ID copied'); };
-    $('#cm-new', m).onclick = () => { closeModal(); newTicketModal(uid); };
-    const mk = $('#cm-agent', m); if (mk) mk.onclick = () => { closeModal(); agentModal(uid, p && p.name); };
-    m.addEventListener('click', (e) => { const o = e.target.closest('[data-open]'); if (o) { closeModal(); location.hash = '#inbox/' + o.dataset.open; } });
-  });
-}
-
-/* ---------------- reports ---------------- */
-let rpFilter = 'pending';
-$('#rp-filter').addEventListener('click', (e) => {
-  const b = e.target.closest('button'); if (!b) return;
-  rpFilter = b.dataset.v; $$('button', $('#rp-filter')).forEach(x => x.classList.toggle('on', x === b)); renderReports();
-});
-async function renderReports() {
-  const box = $('#rp-list');
-  if (S.reports === null) { box.innerHTML = skeleton(5); return; }
-  const list = S.reports.filter(r => rpFilter === 'all' || (r.status || 'pending') === rpFilter);
-  if (!list.length) { box.innerHTML = '<div class="empty">Nothing in this queue.</div>'; return; }
-  if (!S.usersCache) loadAllUsers().then(() => { if (page() === 'reports') renderReports(); }).catch(() => {});
-  const nm = (uid) => { const u = (S.usersCache || {})[uid]; return u ? (u.name || uid) : (uid ? uid.slice(0, 8) + '…' : 'Unknown'); };
-  box.innerHTML = list.map(r => {
-    const target = r.type === 'message' ? r.messageSenderUid : r.postOwnerUid;
-    const status = r.status || 'pending';
-    return `<div class="canned-item" data-id="${r.id}">
-      <div class="grow">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>${r.type === 'message' ? 'Message report' : 'Post report'}</b>
-          <span class="chip ${status === 'pending' ? 'open' : status === 'reviewing' ? 'pending' : 'resolved'}">${esc(status)}</span>
-          ${r.reason ? `<span class="chip cat">${esc(r.reason)}</span>` : ''}</div>
-        <p style="color:var(--ink)">${esc(r.type === 'message' ? (r.messageText || '(no text)') : (r.description || '(no description)'))}</p>
-        ${r.type === 'message' && r.description ? `<p>Reporter’s note: ${esc(r.description)}</p>` : ''}
-        <p>Reported user: <b>${esc(nm(target))}</b> · Reported by: <b>${esc(r.reporterName || nm(r.reporterUid))}</b>${r.reporterContact ? ' · ' + esc(r.reporterContact) : ''}${r.postId ? ' · post ' + esc(r.postId) : ''}</p>
-        ${r.handledBy ? `<p>Handled by ${esc(r.handledBy)}</p>` : ''}
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        ${status !== 'reviewing' ? '<button class="btn sm" data-rs="reviewing">Review</button>' : ''}
-        ${status !== 'resolved' ? '<button class="btn sm primary" data-rs="resolved">Resolve</button>' : ''}
-        ${status !== 'dismissed' ? '<button class="btn sm" data-rs="dismissed">Dismiss</button>' : ''}
-        ${target ? `<button class="btn sm" data-ru="${esc(target)}">User</button>` : ''}
-      </div></div>`;
-  }).join('');
-}
-$('#rp-list').addEventListener('click', async (e) => {
-  const item = e.target.closest('.canned-item'); if (!item) return;
-  const rs = e.target.closest('[data-rs]'), ru = e.target.closest('[data-ru]');
-  if (ru) { await loadAllUsers().catch(() => {}); openCustomer(ru.dataset.ru); return; }
-  if (rs) {
-    await busy(update(ref(db, 'reports/' + item.dataset.id), { status: rs.dataset.rs, handledBy: S.me.name, handledByUid: S.me.uid, handledAt: serverTimestamp() }));
-    toast('Report updated');
-  }
-});
-
-/* ---------------- saved replies ---------------- */
-const STARTERS = [
-  { title: 'Greeting', shortcut: 'hi', text: 'Hi {{name}}, thanks for contacting Haba Support. My name is {{agent}} and I’ll be helping you today. Could you tell me a bit more about what’s happening?' },
-  { title: 'Need more info', shortcut: 'info', text: 'Thanks {{name}}. To look into this, could you share the phone number on your account and a screenshot of what you’re seeing?' },
-  { title: 'Verified badge payment', shortcut: 'badge', text: 'Hi {{name}}, I can see your badge payment is being checked. It usually activates within a few minutes — please close and reopen Haba and let me know if it still shows as unverified.' },
-  { title: 'Fixed / resolved', shortcut: 'fixed', text: 'Great news {{name}} — that’s sorted on our side. Please restart the app and let us know if anything else comes up. Have a great day!' },
-  { title: 'Escalating', shortcut: 'escalate', text: 'Thanks for your patience {{name}}. I’ve passed this to our technical team and will update you here as soon as I hear back.' }
-];
-async function renderCanned() {
-  const box = $('#cn-list');
-  if (!S.cannedLoaded) { box.innerHTML = skeleton(4); return; }
-  const list = Object.entries(S.canned).map(([id, c]) => ({ id, ...c })).sort((a, b) => String(a.title).localeCompare(String(b.title)));
-  if (!list.length) {
-    box.innerHTML = `<div class="empty">No saved replies yet.<br><br><button class="btn primary" data-act="canned-starters">Add starter replies</button></div>`; return;
-  }
-  box.innerHTML = list.map(c => `<div class="canned-item"><div class="grow"><b>${esc(c.title)}</b> ${c.shortcut ? `<code class="k">/${esc(c.shortcut)}</code>` : ''}<p>${esc(c.text)}</p></div>
-    <button class="btn sm" data-ce="${c.id}">Edit</button><button class="btn sm danger" data-cd="${c.id}">Delete</button></div>`).join('');
-}
-function cannedModal(id) {
-  const c = id ? S.canned[id] : null;
-  openModal(`<h3>${c ? 'Edit' : 'New'} saved reply</h3>
-    <div class="field"><label>Title</label><input class="input" id="cm-title" value="${esc(c ? c.title : '')}" placeholder="e.g. Verified badge payment"></div>
-    <div class="field"><label>Shortcut (optional)</label><input class="input" id="cm-short" value="${esc(c ? c.shortcut || '' : '')}" placeholder="badge" maxlength="20"></div>
-    <div class="field"><label>Message</label><textarea class="textarea" id="cm-text" rows="6" placeholder="Hi {{name}}, …">${esc(c ? c.text : '')}</textarea></div>
-    <div class="actions"><button class="btn" id="cm-cancel">Cancel</button><button class="btn primary" id="cm-save">Save</button></div>`, (m) => {
-    $('#cm-cancel', m).onclick = closeModal;
-    $('#cm-save', m).onclick = async () => {
-      const title = $('#cm-title', m).value.trim(), text = $('#cm-text', m).value.trim(), shortcut = $('#cm-short', m).value.trim().replace(/[^\w-]/g, '').toLowerCase();
-      if (!title || !text) return toast('Add a title and a message', 'err');
-      closeModal();
-      const key = id || push(ref(db, 'support_canned')).key;
-      await busy(set(ref(db, 'support_canned/' + key), { title, text, shortcut, updatedBy: S.me.name, updatedAt: serverTimestamp() }));
-      toast('Saved');
-    };
-  });
-}
-$('#page-canned').addEventListener('click', async (e) => {
-  const a = e.target.closest('[data-act]'), ed = e.target.closest('[data-ce]'), de = e.target.closest('[data-cd]');
-  if (a && a.dataset.act === 'canned-new') cannedModal();
-  if (a && a.dataset.act === 'canned-starters') {
-    const up = {}; STARTERS.forEach(s => { up['support_canned/' + push(ref(db, 'support_canned')).key] = { ...s, updatedBy: S.me.name, updatedAt: serverTimestamp() }; });
-    await busy(update(ref(db), up)); toast('Starter replies added');
-  }
-  if (ed) cannedModal(ed.dataset.ce);
-  if (de && await confirmBox('Delete this reply?', 'Agents will no longer be able to use it.', 'Delete')) { await busy(remove(ref(db, 'support_canned/' + de.dataset.cd))); toast('Deleted'); }
-});
-
-/* ---------------- team ---------------- */
-function renderTeam() {
-  const rows = Object.entries(S.agents).sort((a, b) => String(a[1].name).localeCompare(String(b[1].name)));
-  $('#tm-body').innerHTML = rows.length ? rows.map(([uid, a]) => `<tr>
-    <td><div style="display:flex;gap:10px;align-items:center">${avatar(a.name, '', 'sm')}<div><b>${esc(a.name || uid)}</b>${uid === S.me.uid ? ' <span class="chip normal">You</span>' : ''}<div style="color:var(--faint);font-size:11.5px;font-family:ui-monospace,Menlo,monospace">${esc(uid)}</div></div></div></td>
-    <td style="text-transform:capitalize">${esc(a.role || 'agent')}</td>
-    <td><span class="chip ${a.active ? 'resolved' : 'normal'}">${a.active ? 'Active' : 'Disabled'}</span></td>
-    <td style="text-align:right">${isAdmin() && uid !== S.me.uid ? `<button class="btn sm" data-tg="${uid}">${a.active ? 'Disable' : 'Enable'}</button> <button class="btn sm" data-tr="${uid}">Make ${a.role === 'admin' ? 'agent' : 'admin'}</button>` : ''}</td></tr>`).join('') : '<tr><td colspan="4"><div class="empty">No agents yet.</div></td></tr>';
-}
-function agentModal(prefUid, prefName) {
-  openModal(`<h3>Add agent</h3>
-    <p style="color:var(--muted);margin:0 0 14px">Paste the person’s Haba user ID (find it on the Customers page, or ask them to copy it from the “No agent access” screen). They sign in here with their own email and password.</p>
-    <div class="field"><label>User ID</label><input class="input" id="ag-uid" value="${esc(prefUid || '')}"></div>
-    <div class="field"><label>Display name</label><input class="input" id="ag-name" value="${esc(prefName || '')}"></div>
-    <div class="field"><label>Role</label><select class="select" id="ag-role"><option value="agent">Agent</option><option value="admin">Admin</option></select></div>
-    <div class="actions"><button class="btn" id="ag-cancel">Cancel</button><button class="btn primary" id="ag-save">Add</button></div>`, (m) => {
-    $('#ag-cancel', m).onclick = closeModal;
-    $('#ag-save', m).onclick = async () => {
-      const uid = $('#ag-uid', m).value.trim(), name = $('#ag-name', m).value.trim();
-      if (!uid || !name) return toast('Enter a user ID and a name', 'err');
-      closeModal();
-      await busy(set(ref(db, 'support_agents/' + uid), { name, role: $('#ag-role', m).value, active: true, addedBy: S.me.name, createdAt: serverTimestamp() }));
-      toast('Agent added');
-    };
-  });
-}
-$('#page-team').addEventListener('click', async (e) => {
-  const a = e.target.closest('[data-act]'); if (a && a.dataset.act === 'agent-new') agentModal();
-  const tg = e.target.closest('[data-tg]'), tr = e.target.closest('[data-tr]');
-  if (tg) { const cur = S.agents[tg.dataset.tg]; await busy(update(ref(db, 'support_agents/' + tg.dataset.tg), { active: !cur.active })); }
-  if (tr) { const cur = S.agents[tr.dataset.tr]; await busy(update(ref(db, 'support_agents/' + tr.dataset.tr), { role: cur.role === 'admin' ? 'agent' : 'admin' })); }
-});
-
-/* ---------------- global actions ---------------- */
-document.addEventListener('click', (e) => {
-  const n = e.target.closest('[data-act="new-ticket"]'); if (n) newTicketModal();
-  const o = e.target.closest('#page-overview [data-open]'); // handled above
-});
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && S.sel) { const t = S.tickets[S.sel]; if (t && t.unreadForAgent) update(ref(db, 'support_tickets/' + S.sel), { unreadForAgent: 0 }).catch(() => {}); }
-});
-// keep relative times fresh
-setInterval(() => { if (S.me && page() === 'inbox') renderTickets(); }, 60000);
-</script>
 </body>
 </html>
