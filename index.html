@@ -84,6 +84,20 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .me{flex-direction:column;gap:6px;padding:10px 0 0}
 .me .who{display:none}
 
+/* hover / keyboard focus: sidebar slides open over the page and shows labels */
+@media (min-width:821px) and (hover:hover){
+  .rail{position:relative;z-index:100;overflow:hidden;white-space:nowrap;transition:width .18s ease,box-shadow .18s ease}
+  .rail:hover,.rail:focus-within{width:236px;align-items:stretch;box-shadow:var(--shadow)}
+  .rail:hover .brand,.rail:focus-within .brand{justify-content:flex-start;padding:4px 8px 18px}
+  .rail:hover .brand > div:last-child,.rail:focus-within .brand > div:last-child{display:block}
+  .rail:hover .nav,.rail:focus-within .nav{align-items:stretch}
+  .rail:hover .nav a,.rail:focus-within .nav a{width:auto;justify-content:flex-start;padding:0 12px}
+  .rail:hover .nav a .lbl,.rail:focus-within .nav a .lbl{display:inline}
+  .rail:hover .nav .badge,.rail:focus-within .nav .badge{position:static;margin-left:auto}
+  .rail:hover .me,.rail:focus-within .me{flex-direction:row;padding:10px 8px}
+  .rail:hover .me .who,.rail:focus-within .me .who{display:block}
+}
+
 .me{display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid var(--line);margin-top:8px}
 .me .who{min-width:0;flex:1}
 .me .who b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
