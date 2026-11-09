@@ -139,9 +139,12 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .row .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row .s{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .empty{color:var(--muted);text-align:center;padding:36px 12px}
-.bars{display:flex;align-items:flex-end;gap:12px;height:140px;padding:6px 4px 0}
-.bars .b{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%}
-.bars .b i{display:block;width:100%;max-width:38px;background:var(--brand);border-radius:6px 6px 2px 2px;min-height:3px;opacity:.88}
+.bars{display:flex;align-items:flex-end;gap:0;height:140px;padding:6px 0 0;border-bottom:1px solid var(--ink)}
+.bars .b{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%;border-left:1px solid var(--line);position:relative}
+.bars .b:last-child{border-right:1px solid var(--line)}
+.bars .b i{display:block;width:100%;max-width:none;background:var(--brand);border-radius:0;min-height:3px;opacity:.88;box-shadow:inset 0 0 0 1px var(--panel)}
+.bars .b em{position:absolute;bottom:-20px}
+.bars{margin-bottom:22px}
 .bars .b em{font-style:normal;font-size:11.5px;color:var(--muted)} .bars .b strong{font-size:12px}
 
 /* ---------- inbox (3 panes) ---------- */
