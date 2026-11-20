@@ -107,9 +107,20 @@ h2 .red{color:var(--red)}
 .fact b{display:block;font-weight:800;font-size:clamp(2rem,4.5vw,4.2rem);letter-spacing:-.045em;line-height:1}
 .fact span{display:block;margin-top:.5rem;font-style:italic;font-weight:500;color:var(--muted)}
 .about p{max-width:36rem;font-size:1.15rem;font-weight:500;margin:0 0 2.5rem}
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.gallery figure{margin:0;aspect-ratio:4/3;border-radius:1.6rem;overflow:hidden;background:#f1f1f1;display:grid;place-items:center;color:var(--muted);font-style:italic}
-.gallery img{width:100%;height:100%;object-fit:cover;display:block}
+/* horizontal image stack */
+.gwrap{position:relative}
+.gallery{--ov:3.5rem;display:flex;align-items:center;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2.2rem calc(var(--ov) + 1rem) 2.6rem 1rem;margin:0 calc(var(--pad)*-1);padding-left:var(--pad)}
+.gallery::-webkit-scrollbar{display:none}
+.gallery figure{--r:-3deg;position:relative;flex:none;margin:0 0 0 calc(var(--ov)*-1);width:clamp(14rem,27vw,21rem);aspect-ratio:4/5;border-radius:1.8rem;overflow:hidden;background:#f1f1f1;display:grid;place-items:center;color:var(--muted);font-style:italic;text-align:center;box-shadow:0 14px 34px rgba(0,0,0,.2);border:4px solid #fff;transform:rotate(var(--r));scroll-snap-align:center;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.gallery figure:first-child{margin-left:0}
+.gallery figure:nth-child(even){--r:2.5deg;transform:rotate(var(--r)) translateY(1rem)}
+.gallery figure:nth-child(3n){--r:-1.5deg}
+.gallery figure:hover,.gallery figure:focus-visible,.gallery figure.on{z-index:50!important;transform:rotate(0) translateY(-.8rem) scale(1.04);box-shadow:0 26px 54px rgba(0,0,0,.3)}
+.gallery img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.gnav{position:absolute;top:50%;z-index:60;transform:translateY(-50%);width:3rem;height:3rem;border-radius:50%;border:0;background:#fff;color:var(--ink);font:600 1.5rem/1 var(--font);box-shadow:0 6px 20px rgba(0,0,0,.22);cursor:pointer;transition:background .2s,color .2s,opacity .2s}
+.gnav:hover{background:var(--red);color:#fff}
+.gnav[disabled]{opacity:0;pointer-events:none}
+.gnav.prev{left:.4rem}.gnav.next{right:.4rem}
 .big{display:inline-block;font-weight:800;font-size:clamp(2.2rem,6vw,5.5rem);letter-spacing:-.045em;line-height:1;text-decoration:none}
 .big:hover{color:var(--red)}
 .btns{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem}
@@ -119,7 +130,7 @@ h2 .red{color:var(--red)}
 footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
 .mbar{display:none}
 
-@media (max-width:64rem){.facts{grid-template-columns:1fr 1fr;row-gap:2rem}.fact:nth-child(3){padding-left:0;border-left:0}.gallery{grid-template-columns:1fr 1fr}}
+@media (max-width:64rem){.facts{grid-template-columns:1fr 1fr;row-gap:2rem}.fact:nth-child(3){padding-left:0;border-left:0}}
 @media (max-width:56rem){
   .hero{grid-template-columns:1fr}
   .stack{order:-1;height:clamp(22rem,70vw,34rem)}
@@ -132,8 +143,10 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
   .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;gap:.6rem;padding:.6rem .9rem calc(.6rem + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--line)}
   .mbar .btn{flex:1}
 }
-@media (max-width:30rem){.row{grid-template-columns:1fr}.gallery{gap:.6rem}.brand span{font-size:.8rem}}
+@media (max-width:30rem){.row{grid-template-columns:1fr}.brand span{font-size:.8rem}}
 @media (max-width:40rem){
+  .gallery{--ov:2.4rem}
+  .gnav{display:none}
   header{margin:.5rem 0;padding:.4rem 0}
   .brand .logo{width:4.4rem;height:4.4rem}
   nav{gap:1.1rem}
@@ -264,7 +277,11 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 
     <section id="gallery">
       <h2>Gallery</h2>
-      <div class="gallery" id="galleryGrid"></div>
+      <div class="gwrap">
+        <button class="gnav prev" id="gPrev" type="button" aria-label="Previous photos">‹</button>
+        <div class="gallery" id="galleryGrid" tabindex="0" aria-label="Photo gallery, scroll sideways"></div>
+        <button class="gnav next" id="gNext" type="button" aria-label="Next photos">›</button>
+      </div>
     </section>
 
     <section id="contact">
@@ -373,13 +390,16 @@ stack.addEventListener("keydown", (e) => {
 });
 
 const gallery = document.getElementById("galleryGrid");
-if (PHOTOS.length) {
-  PHOTOS.forEach((file, i) => {
+const GALLERY_PHOTOS = PHOTOS.length ? PHOTOS : STACK_PHOTOS.filter(Boolean);
+if (GALLERY_PHOTOS.length) {
+  GALLERY_PHOTOS.forEach((file, i) => {
     const fig = document.createElement("figure");
     const img = document.createElement("img");
     img.src = "images/" + file;
     img.alt = "Mabula Guest House photo " + (i + 1);
     img.loading = "lazy";
+    fig.tabIndex = 0;
+    fig.style.zIndex = i + 1;
     fig.appendChild(img);
     gallery.appendChild(fig);
   });
@@ -387,9 +407,28 @@ if (PHOTOS.length) {
   for (let i = 0; i < 6; i++) {
     const fig = document.createElement("figure");
     fig.textContent = "Photo coming soon";
+    fig.style.zIndex = i + 1;
     gallery.appendChild(fig);
   }
 }
+// arrows + tap-to-bring-forward
+const gPrev = document.getElementById("gPrev"), gNext = document.getElementById("gNext");
+const gStep = () => Math.max(gallery.clientWidth * 0.6, 200);
+const gEdges = () => {
+  gPrev.disabled = gallery.scrollLeft < 8;
+  gNext.disabled = gallery.scrollLeft + gallery.clientWidth > gallery.scrollWidth - 8;
+};
+gPrev.onclick = () => gallery.scrollBy({ left: -gStep(), behavior: "smooth" });
+gNext.onclick = () => gallery.scrollBy({ left: gStep(), behavior: "smooth" });
+gallery.addEventListener("scroll", gEdges, { passive: true });
+addEventListener("resize", gEdges);
+gEdges();
+gallery.addEventListener("click", (e) => {
+  const fig = e.target.closest("figure");
+  if (!fig) return;
+  gallery.querySelectorAll("figure.on").forEach((f) => f !== fig && f.classList.remove("on"));
+  fig.classList.toggle("on");
+});
 
 const form = document.getElementById("bookForm");
 const btn = document.getElementById("submitBtn");
