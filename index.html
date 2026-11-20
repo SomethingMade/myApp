@@ -40,31 +40,26 @@ h1 .red{color:var(--red)}
 .tags p{margin:0;padding:0 1.2rem;border-left:2px solid var(--red);font-style:italic;font-weight:500;font-size:clamp(.82rem,1vw,.95rem);line-height:1.3}
 .tags p:first-child{padding-left:0;border-left:0}
 
-/* hero image */
-.photo{position:relative;min-height:clamp(24rem,46vw,40rem);border-radius:2.4rem;overflow:hidden;
-  box-shadow:0 24px 60px rgba(0,0,0,.25);
-  background:
-   radial-gradient(60% 70% at 88% 55%,rgba(255,120,40,.95),rgba(214,50,12,.9) 55%,transparent 80%),
-   linear-gradient(115deg,#69786f 0%,#8c978f 24%,#dcd6c8 46%,#f1a36a 70%,#c93a14 100%);
-  background-size:cover;background-position:center}
-.photo.ambient{background-size:240% 240%;animation:drift 14s ease-in-out infinite alternate}
+/* hero card stack */
+.stack{--o:1.1rem;position:relative;isolation:isolate;height:clamp(24rem,46vw,40rem);margin:calc(var(--o)*3) calc(var(--o)*3) 0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.card{position:absolute;inset:0;border-radius:2.4rem;overflow:hidden;opacity:0;z-index:0;transform:translate(calc(var(--o)*3),calc(var(--o)*-3)) rotate(9deg);box-shadow:0 12px 28px rgba(0,0,0,.18);transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s,box-shadow .55s;will-change:transform}
+.card[data-pos="0"]{opacity:1;z-index:4;transform:none;box-shadow:0 24px 60px rgba(0,0,0,.25);cursor:pointer}
+.card[data-pos="1"]{opacity:1;z-index:3;transform:translate(var(--o),calc(var(--o)*-1)) rotate(3deg)}
+.card[data-pos="2"]{opacity:1;z-index:2;transform:translate(calc(var(--o)*2),calc(var(--o)*-2)) rotate(6deg)}
+.card[data-pos="3"]{opacity:1;z-index:1;transform:translate(calc(var(--o)*3),calc(var(--o)*-3)) rotate(9deg)}
+.card[data-pos="0"]:hover{transform:translate(-3px,-3px)}
+.stack .card.out{transition-duration:.28s;transform:translate(115%,-6%) rotate(14deg)}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.card::before{content:"";position:absolute;top:0;left:0;width:20%;height:11%;background:var(--bg);border-radius:0 0 1.6rem 0;pointer-events:none;z-index:2}
+.card::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 45%,transparent 70%)}
+.ph{position:absolute;inset:0;z-index:2;display:grid;place-items:center;font-style:italic;font-weight:600}
+.card.f0{color:#fff;background:radial-gradient(60% 70% at 88% 55%,rgba(255,120,40,.95),rgba(214,50,12,.9) 55%,transparent 80%),linear-gradient(115deg,#69786f 0%,#8c978f 24%,#dcd6c8 46%,#f1a36a 70%,#c93a14 100%);background-size:240% 240%;animation:drift 14s ease-in-out infinite alternate}
+.card.f1{color:#fff;background:var(--red)}
+.card.f2{color:#fff;background:#0a0a0a}
+.card.f3{color:#333;background:#d6d6d6}
 @keyframes drift{from{background-position:0% 40%}to{background-position:100% 60%}}
-.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.photo::before{content:"";position:absolute;top:0;left:0;width:20%;height:11%;background:var(--bg);border-radius:0 0 1.6rem 0;pointer-events:none;z-index:2}
-.photo::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 45%,transparent 70%)}
-.photo img[hidden]{display:none}
-
-/* stacked cards behind hero photo */
-.stack{--o:1.1rem;position:relative;isolation:isolate;margin:calc(var(--o)*3) calc(var(--o)*3) 0 0}
-.stack .photo{z-index:1}
-.back{position:absolute;inset:0;border-radius:2.4rem;pointer-events:none;box-shadow:0 12px 28px rgba(0,0,0,.18);transition:transform .4s ease}
-.back.b1{z-index:-1;background:#e4143c;transform:translate(var(--o),calc(var(--o)*-1)) rotate(3deg)}
-.back.b2{z-index:-2;background:#0a0a0a;transform:translate(calc(var(--o)*2),calc(var(--o)*-2)) rotate(6deg)}
-.back.b3{z-index:-3;background:#d6d6d6;transform:translate(calc(var(--o)*3),calc(var(--o)*-3)) rotate(9deg)}
-.stack:hover .back.b1{transform:translate(calc(var(--o)*1.3),calc(var(--o)*-1.3)) rotate(4deg)}
-.stack:hover .back.b2{transform:translate(calc(var(--o)*2.6),calc(var(--o)*-2.6)) rotate(8deg)}
-.stack:hover .back.b3{transform:translate(calc(var(--o)*3.9),calc(var(--o)*-3.9)) rotate(12deg)}
+.hint{position:absolute;left:50%;bottom:1rem;z-index:10;transform:translateX(-50%);padding:.45rem 1rem;border-radius:999px;background:rgba(255,255,255,.92);color:var(--ink);font:600 .8rem var(--font);pointer-events:none;white-space:nowrap;transition:opacity .3s}
+.hint.gone{opacity:0}
 
 /* booking form */
 .book{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(2rem,5vw,5rem);align-items:start}
@@ -109,7 +104,8 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 @media (max-width:64rem){.facts{grid-template-columns:1fr 1fr;row-gap:2rem}.fact:nth-child(3){padding-left:0;border-left:0}.gallery{grid-template-columns:1fr 1fr}}
 @media (max-width:56rem){
   .hero{grid-template-columns:1fr}
-  .photo{min-height:22rem;border-radius:1.8rem}
+  .stack{height:clamp(22rem,70vw,34rem)}
+  .card{border-radius:1.8rem}
   .book{grid-template-columns:1fr}
   .tags{flex-direction:column;gap:.7rem}
   .tags p,.tags p:first-child{padding:0 0 0 .9rem;border-left:2px solid var(--red)}
@@ -127,10 +123,9 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
   .hero{gap:1.75rem;padding:.5rem 0 2.5rem}
   .eyebrow{margin-bottom:.7rem}
   .lead{margin:1.25rem 0}
-  .photo{min-height:0;aspect-ratio:4/5;max-height:70vh;border-radius:1.6rem}
-  .photo::before{width:26%;height:9%}
-  .stack{--o:.6rem}
-  .back{border-radius:1.6rem}
+  .stack{--o:.6rem;height:auto;aspect-ratio:4/5;max-height:70vh}
+  .card{border-radius:1.6rem}
+  .card::before{width:26%;height:9%}
   section{padding:2.25rem 0}
   h2{margin-bottom:1.1rem}
   .about p{font-size:1.05rem;margin-bottom:1.75rem}
@@ -145,7 +140,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
   footer{font-size:.82rem}
 }
 @media (max-width:24rem){nav a:nth-child(4){display:none}.brand svg{width:2.2rem;height:2.2rem}}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.back{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}.card.f0{animation:none}}
 </style>
 </head>
 <body>
@@ -177,13 +172,8 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
         </div>
       </div>
 
-      <div class="stack">
-        <span class="back b3" aria-hidden="true"></span>
-        <span class="back b2" aria-hidden="true"></span>
-        <span class="back b1" aria-hidden="true"></span>
-        <div class="photo ambient" id="heroPhoto">
-          <img id="heroImg" alt="Mabula Guest House" fetchpriority="high" hidden>
-        </div>
+      <div class="stack" id="stack" role="group" aria-label="Photos of Mabula Guest House">
+        <span class="hint" id="hint" aria-hidden="true">Tap for next ›</span>
       </div>
     </div>
 
@@ -247,20 +237,74 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 const RATE = 850;
 const WHATSAPP = "27765231996";
 
-// Hero photo file name (file lives in the images/ folder)
-const HERO_PHOTO = "room.jpg";
+// Photos for the hero card stack (files live in the images/ folder).
+// Leave "" for a placeholder card. Add up to 4 or more, e.g. ["room.jpg","room2.jpg","garden.jpg","lounge.jpg"]
+const STACK_PHOTOS = ["room.jpg", "", "", ""];
 // Add gallery photo file names here, e.g. ["room1.jpg", "garden.jpg"]
 const PHOTOS = [];
 
 const money = (n) => "R" + n.toLocaleString("en-ZA");
 
-const photoEl = document.getElementById("heroPhoto");
-const heroImg = document.getElementById("heroImg");
-if (HERO_PHOTO) {
-  heroImg.src = "images/" + HERO_PHOTO;
-  heroImg.hidden = false;
-  photoEl.classList.remove("ambient");
+// ---- hero card stack ----
+const stack = document.getElementById("stack");
+const hint = document.getElementById("hint");
+const N = STACK_PHOTOS.length;
+const cards = STACK_PHOTOS.map((file, i) => {
+  const c = document.createElement("div");
+  c.className = "card f" + (i % 4);
+  const placeholder = () => {
+    const s = document.createElement("span");
+    s.className = "ph";
+    s.textContent = "Photo coming soon";
+    c.appendChild(s);
+  };
+  if (file) {
+    const img = new Image();
+    img.alt = "Mabula Guest House photo " + (i + 1);
+    img.decoding = "async";
+    if (i === 0) img.fetchPriority = "high";
+    img.onerror = () => { img.remove(); placeholder(); };
+    img.src = "images/" + file;
+    c.appendChild(img);
+  } else {
+    placeholder();
+  }
+  stack.appendChild(c);
+  return c;
+});
+let order = cards.slice();
+let busy = false;
+
+function layout() {
+  order.forEach((c, i) => {
+    c.dataset.pos = i;
+    c.classList.remove("out");
+    const front = i === 0 && N > 1;
+    c.tabIndex = front ? 0 : -1;
+    c.setAttribute("aria-hidden", i === 0 ? "false" : "true");
+    if (front) { c.setAttribute("role", "button"); c.setAttribute("aria-label", "Show next photo"); }
+    else { c.removeAttribute("role"); c.removeAttribute("aria-label"); }
+  });
 }
+function nextCard() {
+  if (busy || N < 2) return;
+  busy = true;
+  hint.classList.add("gone");
+  order[0].classList.add("out");
+  setTimeout(() => {
+    order.push(order.shift());
+    layout();
+    setTimeout(() => { busy = false; }, 550);
+  }, 280);
+}
+layout();
+if (N < 2) hint.hidden = true;
+stack.addEventListener("click", (e) => {
+  if (e.target.closest(".card") === order[0]) nextCard();
+});
+stack.addEventListener("keydown", (e) => {
+  if ((e.key === "Enter" || e.key === " ") && e.target === order[0]) { e.preventDefault(); nextCard(); }
+});
 
 const gallery = document.getElementById("galleryGrid");
 if (PHOTOS.length) {
