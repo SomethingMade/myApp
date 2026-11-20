@@ -12,7 +12,8 @@
 :root{--bg:#fff;--ink:#0a0a0a;--muted:#555a5d;--line:#e4e4e4;--red:#e4143c;--font:"Inter Tight","Helvetica Neue",Arial,sans-serif;
   --pad:clamp(1.1rem,4.5vw,5rem)}
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:1rem}
+html{scroll-behavior:smooth;scroll-padding-top:5.5rem;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.55 var(--font)}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--red);outline-offset:3px}
@@ -41,6 +42,7 @@ h1 .red{color:var(--red)}
 
 /* hero image */
 .photo{position:relative;min-height:clamp(24rem,46vw,40rem);border-radius:2.4rem;overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.25);
   background:
    radial-gradient(60% 70% at 88% 55%,rgba(255,120,40,.95),rgba(214,50,12,.9) 55%,transparent 80%),
    linear-gradient(115deg,#69786f 0%,#8c978f 24%,#dcd6c8 46%,#f1a36a 70%,#c93a14 100%);
@@ -49,6 +51,8 @@ h1 .red{color:var(--red)}
 @keyframes drift{from{background-position:0% 40%}to{background-position:100% 60%}}
 .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .photo::before{content:"";position:absolute;top:0;left:0;width:20%;height:11%;background:var(--bg);border-radius:0 0 1.6rem 0;pointer-events:none;z-index:2}
+.photo::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 45%,transparent 70%)}
 .photo img[hidden]{display:none}
 
 /* booking form */
@@ -61,6 +65,11 @@ h1 .red{color:var(--red)}
 .bookform textarea{border-radius:1.4rem;min-height:7.5rem;resize:vertical;display:block;margin-bottom:.9rem}
 .bookform ::placeholder{color:#767b7e}
 .bookform select{background-image:linear-gradient(45deg,transparent 50%,#555 50%),linear-gradient(135deg,#555 50%,transparent 50%);background-position:calc(100% - 1.3rem) 55%,calc(100% - 1rem) 55%;background-size:.35rem .35rem;background-repeat:no-repeat}
+.field{display:block;min-width:0}
+.field span{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin:0 0 .3rem 1.2rem}
+.bookform input,.bookform select{min-height:3.1rem}
+.bookform input[type=date]{text-align:left;display:block;line-height:1.2}
+.bookform input[type=date]::-webkit-date-and-time-value{text-align:left}
 .submit{width:100%;min-height:3.2rem;border:0;border-radius:999px;background:var(--red);color:#fff;font:600 1rem var(--font);cursor:pointer;box-shadow:0 6px 20px rgba(228,20,60,.35)}
 .submit:hover{filter:brightness(1.08)}
 
@@ -99,6 +108,30 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
   .mbar .btn{flex:1}
 }
 @media (max-width:30rem){.row{grid-template-columns:1fr}.gallery{gap:.6rem}.brand span{font-size:.8rem}}
+@media (max-width:40rem){
+  header{margin:.5rem 0;padding:.5rem 0}
+  header.float{padding:.5rem .9rem}
+  nav{gap:1.1rem}
+  nav a{font-size:.85rem;padding:.6rem 0}
+  .hero{gap:1.75rem;padding:.5rem 0 2.5rem}
+  .eyebrow{margin-bottom:.7rem}
+  .lead{margin:1.25rem 0}
+  .photo{min-height:0;aspect-ratio:4/5;max-height:70vh;border-radius:1.6rem}
+  .photo::before{width:26%;height:9%}
+  section{padding:2.25rem 0}
+  h2{margin-bottom:1.1rem}
+  .about p{font-size:1.05rem;margin-bottom:1.75rem}
+  .facts{row-gap:1.6rem}
+  .fact{padding:0 1rem}
+  .fact:nth-child(odd){padding-left:0;border-left:0}
+  .btns{flex-direction:column;gap:.6rem}
+  .btns .btn{width:100%}
+  .mbar{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(255,255,255,.94)}
+  .mbar .btn{min-height:2.9rem}
+  .bookform textarea{min-height:6rem}
+  footer{font-size:.82rem}
+}
+@media (max-width:24rem){nav a:nth-child(4){display:none}.brand svg{width:2.2rem;height:2.2rem}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -148,8 +181,8 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
             <input name="phone" type="tel" placeholder="Phone Number" aria-label="Phone number" autocomplete="tel">
           </div>
           <div class="row">
-            <input name="checkin" type="text" placeholder="Check-in date" aria-label="Check-in date" required onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
-            <select name="nights" aria-label="Nights"></select>
+            <label class="field"><span>Check-in date</span><input name="checkin" type="date" required></label>
+            <label class="field"><span>Nights</span><select name="nights"></select></label>
           </div>
           <div class="row" style="grid-template-columns:1fr">
             <input name="email" type="email" placeholder="Email (optional)" aria-label="Email" autocomplete="email">
@@ -173,7 +206,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 
     <section id="gallery">
       <h2>Gallery</h2>
-      <div class="gallery" id="gallery"></div>
+      <div class="gallery" id="galleryGrid"></div>
     </section>
 
     <section id="contact">
@@ -196,7 +229,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 const RATE = 850;
 const WHATSAPP = "27765231996";
 
-// Put the hero photo file name here once it is in the images/ folder, e.g. "room.jpg"
+// Hero photo file name (file lives in the images/ folder)
 const HERO_PHOTO = "room.jpg";
 // Add gallery photo file names here, e.g. ["room1.jpg", "garden.jpg"]
 const PHOTOS = [];
@@ -211,7 +244,7 @@ if (HERO_PHOTO) {
   photoEl.classList.remove("ambient");
 }
 
-const gallery = document.getElementById("gallery");
+const gallery = document.getElementById("galleryGrid");
 if (PHOTOS.length) {
   PHOTOS.forEach((file, i) => {
     const fig = document.createElement("figure");
@@ -239,9 +272,7 @@ for (let i = 1; i <= 14; i++) {
   o.textContent = i + (i === 1 ? " night" : " nights");
   nights.appendChild(o);
 }
-form.elements.checkin.addEventListener("focus", function () {
-  this.min = new Date().toISOString().split("T")[0];
-});
+form.elements.checkin.min = new Date().toISOString().split("T")[0];
 function updateBtn() {
   btn.textContent = "Send Booking Request · " + money(parseInt(nights.value, 10) * RATE);
 }
