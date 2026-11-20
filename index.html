@@ -21,8 +21,7 @@ a{color:inherit}
 .wrap{width:100%;padding:0 var(--pad)}
 
 /* header */
-header{position:sticky;top:calc(.75rem + env(safe-area-inset-top,0px));z-index:30;display:flex;justify-content:space-between;align-items:center;margin:.75rem 0;padding:.7rem 0;border-radius:999px;transition:background .25s,box-shadow .25s,padding .25s,margin .25s,backdrop-filter .25s}
-header.float{background:rgba(255,255,255,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 8px 30px rgba(0,0,0,.12);padding:.6rem 1.2rem;margin-left:-.4rem;margin-right:-.4rem}
+header{position:relative;z-index:30;display:flex;justify-content:space-between;align-items:center;margin:.75rem 0;padding:.7rem 0}
 .brand{display:flex;align-items:center;gap:.8rem;text-decoration:none}
 .brand svg,.brand .logo{width:2.6rem;height:2.6rem;flex:none}
 .brand .logo{width:5.8rem;height:5.8rem;object-fit:contain;display:block}
@@ -42,6 +41,22 @@ h1 .red{color:var(--red)}
 .tags{display:flex;margin:0}
 .tags p{margin:0;padding:0 1.2rem;border-left:2px solid var(--red);font-style:italic;font-weight:500;font-size:clamp(.82rem,1vw,.95rem);line-height:1.3}
 .tags p:first-child{padding-left:0;border-left:0}
+
+/* hero graphics */
+.hero{position:relative;isolation:isolate}
+.art{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.art>*{position:absolute;display:block}
+.art .blob{top:-6%;right:-8%;width:min(46vw,34rem);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(228,20,60,.22),rgba(228,20,60,.06) 60%,transparent 72%)}
+.art .ring{top:2%;right:34%;width:clamp(5rem,12vw,10rem);aspect-ratio:1;border:2px solid var(--red);border-radius:50%;opacity:.35;animation:bob 9s ease-in-out infinite}
+.art .dots{bottom:2%;left:-1%;width:clamp(7rem,16vw,13rem);aspect-ratio:1;background:radial-gradient(circle,var(--red) 2px,transparent 2.5px) 0 0/1.1rem 1.1rem;opacity:.35;-webkit-mask:linear-gradient(135deg,#000,transparent 80%);mask:linear-gradient(135deg,#000,transparent 80%)}
+.art .arc{bottom:-4%;right:20%;width:clamp(9rem,22vw,18rem);height:auto;opacity:.5;animation:bob 11s ease-in-out infinite reverse}
+.art .star{top:8%;left:46%;width:clamp(1.4rem,2.6vw,2.4rem);color:var(--red);animation:spin 18s linear infinite}
+.art .star.s2{top:auto;bottom:10%;left:auto;right:2%;width:clamp(1rem,1.8vw,1.6rem);opacity:.6;animation-duration:24s}
+.art .house{top:46%;left:-2%;width:clamp(3.5rem,7vw,6rem);color:var(--ink);opacity:.08}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.art>*{animation:none!important}}
+@media (max-width:40rem){.art .ring{right:auto;left:62%;top:-1%}.art .star{left:auto;right:6%;top:3%}.art .house{display:none}}
 
 /* hero card stack */
 .stack{--o:1.1rem;position:relative;isolation:isolate;height:clamp(24rem,46vw,40rem);margin:calc(var(--o)*3) calc(var(--o)*3) 0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation}
@@ -121,7 +136,6 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 @media (max-width:40rem){
   header{margin:.5rem 0;padding:.4rem 0}
   .brand .logo{width:4.4rem;height:4.4rem}
-  header.float{padding:.5rem .9rem}
   nav{gap:1.1rem}
   nav a{font-size:.85rem;padding:.6rem 0}
   .hero{gap:1.75rem;padding:.5rem 0 2.5rem}
@@ -180,6 +194,15 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 
   <main id="top">
     <div class="hero">
+      <div class="art" aria-hidden="true">
+        <span class="blob"></span>
+        <span class="ring"></span>
+        <span class="dots"></span>
+        <svg class="arc" viewBox="0 0 200 100" fill="none" stroke="#e4143c" stroke-width="3" stroke-linecap="round"><path d="M5 95C40 10 160 10 195 95"/><path d="M25 95C55 35 145 35 175 95" opacity=".6"/><path d="M45 95C68 60 132 60 155 95" opacity=".35"/></svg>
+        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.6 5.4 11.4 12 12-6.6.6-11.4 5.4-12 12-.6-6.6-5.4-11.4-12-12C6.6 11.4 11.4 6.6 12 0z"/></svg>
+        <svg class="star s2" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.6 5.4 11.4 12 12-6.6.6-11.4 5.4-12 12-.6-6.6-5.4-11.4-12-12C6.6 11.4 11.4 6.6 12 0z"/></svg>
+        <svg class="house" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 11h3v10h6v-6h4v6h6V11h3z"/></svg>
+      </div>
       <div class="copy">
       <div class="intro">
         <p class="eyebrow">Your home in Mokopane</p>
@@ -400,11 +423,6 @@ form.addEventListener("submit", (e) => {
   if (f.message.value.trim()) lines.push("Message: " + f.message.value.trim());
   window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
 });
-
-const topbar = document.querySelector("header");
-const onScroll = () => topbar.classList.toggle("float", window.scrollY > 24);
-addEventListener("scroll", onScroll, { passive: true });
-onScroll();
 
 document.getElementById("year").textContent = new Date().getFullYear();
 </script>
