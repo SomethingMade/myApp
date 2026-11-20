@@ -104,7 +104,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 @media (max-width:64rem){.facts{grid-template-columns:1fr 1fr;row-gap:2rem}.fact:nth-child(3){padding-left:0;border-left:0}.gallery{grid-template-columns:1fr 1fr}}
 @media (max-width:56rem){
   .hero{grid-template-columns:1fr}
-  .stack{height:clamp(22rem,70vw,34rem)}
+  .stack{order:-1;height:clamp(22rem,70vw,34rem)}
   .card{border-radius:1.8rem}
   .book{grid-template-columns:1fr}
   .tags{flex-direction:column;gap:.7rem}
@@ -123,7 +123,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
   .hero{gap:1.75rem;padding:.5rem 0 2.5rem}
   .eyebrow{margin-bottom:.7rem}
   .lead{margin:1.25rem 0}
-  .stack{--o:.6rem;height:auto;aspect-ratio:4/5;max-height:70vh}
+  .stack{--o:.6rem;height:auto;aspect-ratio:4/5;max-height:62vh;margin:2.4rem 2.4rem 0 .2rem}
   .card{border-radius:1.6rem}
   .card::before{width:26%;height:9%}
   section{padding:2.25rem 0}
@@ -139,6 +139,26 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
   .bookform textarea{min-height:6rem}
   footer{font-size:.82rem}
 }
+@media (max-width:56rem){
+  .copy{display:contents}
+  .stack{grid-area:1/1}
+  .intro{grid-area:1/1;z-index:5;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;margin:3.3rem 3.3rem 0 0;padding:1.3rem 1.3rem 1.4rem;color:#fff;pointer-events:none;transition:opacity .35s,visibility 0s}
+  .copy .btns{grid-row:2;grid-column:1;margin-top:0}
+  .intro .eyebrow{font-size:.85rem;margin-bottom:.5rem}
+  .intro h1{font-size:clamp(2.3rem,9.5vw,3.8rem)}
+  .intro h1 .red{color:#ff5a78}
+  .intro .lead{margin:.9rem 0 1rem}
+  .intro .lead p{font-size:.9rem;max-width:none}
+  .intro .tags{flex-direction:row;gap:0}
+  .intro .tags p,.intro .tags p:first-child{padding:0 .8rem;border-left:2px solid var(--red);font-size:.78rem}
+  .intro .tags p:first-child{padding-left:0;border-left:0}
+  .stack::after{content:"";position:absolute;inset:0;border-radius:1.8rem;z-index:5;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.6) 55%,rgba(0,0,0,.3) 100%);transition:opacity .35s}
+  .hint{top:1rem;bottom:auto}
+  .hero.copy-hidden .intro{opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
+  .hero.copy-hidden .stack::after{opacity:0}
+}
+@media (max-width:40rem){.intro{margin:2.4rem 2.4rem 0 .2rem}.stack::after{border-radius:1.6rem}}
+@media (max-width:24rem){.intro h1{font-size:2.2rem}.intro .lead p{font-size:.85rem}.intro .tags p,.intro .tags p:first-child{font-size:.72rem}}
 @media (max-width:24rem){nav a:nth-child(4){display:none}.brand svg{width:2.2rem;height:2.2rem}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}.card.f0{animation:none}}
 </style>
@@ -155,7 +175,8 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
 
   <main id="top">
     <div class="hero">
-      <div>
+      <div class="copy">
+      <div class="intro">
         <p class="eyebrow">Your home in Mokopane</p>
         <h1><span class="red">Mabula</span><br>Guest House<br>Mokopane</h1>
         <div class="lead">
@@ -166,6 +187,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
           <p>Check out<br>at 10:00</p>
           <p>R850<br>per night</p>
         </div>
+      </div>
         <div class="btns">
           <a class="btn red" href="#book">Book a room</a>
           <a class="btn" href="tel:0765231996">Call 076 523 1996</a>
@@ -239,7 +261,7 @@ const WHATSAPP = "27765231996";
 
 // Photos for the hero card stack (files live in the images/ folder).
 // Leave "" for a placeholder card. Add up to 4 or more, e.g. ["room.jpg","room2.jpg","garden.jpg","lounge.jpg"]
-const STACK_PHOTOS = ["room.jpeg", "room1.jpeg", "room2.jpeg", "room3.jpeg"];
+const STACK_PHOTOS = ["room.jpg", "", "", ""];
 // Add gallery photo file names here, e.g. ["room1.jpg", "garden.jpg"]
 const PHOTOS = [];
 
@@ -290,6 +312,7 @@ function nextCard() {
   if (busy || N < 2) return;
   busy = true;
   hint.classList.add("gone");
+  document.querySelector(".hero").classList.add("copy-hidden");
   order[0].classList.add("out");
   setTimeout(() => {
     order.push(order.shift());
@@ -301,6 +324,12 @@ layout();
 if (N < 2) hint.hidden = true;
 stack.addEventListener("click", (e) => {
   if (e.target.closest(".card") === order[0]) nextCard();
+});
+// Clicking anywhere except the cards brings the intro text back
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".card")) return;
+  document.querySelector(".hero").classList.remove("copy-hidden");
+  hint.classList.remove("gone");
 });
 stack.addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && e.target === order[0]) { e.preventDefault(); nextCard(); }
