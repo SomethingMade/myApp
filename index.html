@@ -101,6 +101,8 @@ h1 .red{color:var(--red)}
 section{padding:clamp(2.5rem,7vw,6rem) 0;border-top:1px solid var(--line)}
 h2{margin:0 0 1.5rem;font-weight:800;font-size:clamp(2.2rem,5.5vw,5rem);line-height:.92;letter-spacing:-.045em}
 h2 .red{color:var(--red)}
+.fall .l{display:inline-block;will-change:transform,opacity;transform-origin:50% 80%}
+.bookform{position:relative;z-index:1}
 .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
 .fact{position:relative;isolation:isolate;overflow:hidden;padding:clamp(1.3rem,2.4vw,2rem) clamp(1.1rem,2vw,1.7rem);border-radius:1.6rem;background:linear-gradient(135deg,rgba(228,20,60,.09),rgba(228,20,60,.02) 70%)}
 .fact::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle,var(--red) 1.6px,transparent 2px) 0 0/.9rem .9rem;opacity:.4;-webkit-mask:linear-gradient(125deg,#000 0%,rgba(0,0,0,.25) 45%,transparent 80%);mask:linear-gradient(125deg,#000 0%,rgba(0,0,0,.25) 45%,transparent 80%)}
@@ -247,7 +249,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
     <section id="book">
       <div class="book">
         <div>
-          <h2>Book a <span class="red">room.</span></h2>
+          <h2 aria-label="Book a room.">Book a <span class="red fall" id="fallFrom" aria-hidden="true">room.</span></h2>
           <p class="note">R850 per night. Check in after 12:00, check out at 10:00. Send your request and we will confirm on WhatsApp.</p>
         </div>
         <form class="bookform" id="bookForm" aria-label="Booking request">
@@ -269,7 +271,7 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
     </section>
 
     <section id="about" class="about">
-      <h2>Your stay at<br><span class="red">Mabula.</span></h2>
+      <h2 aria-label="Your stay at Mabula.">Your stay at<br><span class="red fall" id="fallTo" aria-hidden="true">Mabula.</span></h2>
       <p>Mabula Guest House offers simple, comfortable accommodation at 119 Pretorious Street in Mokopane. Send a booking request and we will confirm on WhatsApp.</p>
       <div class="facts">
         <div class="fact"><b>R850</b><span>per night</span></div>
@@ -476,6 +478,48 @@ form.addEventListener("submit", (e) => {
   if (f.message.value.trim()) lines.push("Message: " + f.message.value.trim());
   window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
 });
+
+// Falling red words: "room." drops down the page and lands as "Mabula." (scroll-linked)
+(() => {
+  const from = document.getElementById("fallFrom"), to = document.getElementById("fallTo");
+  if (!from || !to) return;
+  const split = (el) => { const t = el.textContent; el.textContent = ""; return [...t].map((ch) => { const l = document.createElement("span"); l.className = "l"; l.textContent = ch; el.appendChild(l); return l; }); };
+  const A = split(from), B = split(to);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  let y1 = 0, y2 = 0, dx = [], dist = 0;
+  const reset = () => { A.concat(B).forEach((l) => { l.style.transform = ""; l.style.opacity = ""; }); };
+  function measure() {
+    reset();
+    const sx = scrollX, sy = scrollY;
+    const ra = A.map((l) => l.getBoundingClientRect()), rb = B.map((l) => l.getBoundingClientRect());
+    y1 = ra[0].top + sy; y2 = rb[0].top + sy; dist = y2 - y1;
+    dx = ra.map((r, i) => rb[Math.round(i * (B.length - 1) / (A.length - 1))].left - r.left);
+    update();
+  }
+  function update() {
+    if (reduce || dist <= 0) return;
+    const p = (scrollY + innerHeight * 0.6 - y1) / dist;
+    A.forEach((l, i) => {
+      const q = clamp((p - i * 0.05) / 0.8);
+      const e = q * q;
+      const rot = (i % 2 ? 1 : -1) * 16 * Math.sin(q * Math.PI);
+      l.style.transform = `translate(${dx[i] * e}px,${dist * e}px) rotate(${rot}deg)`;
+      l.style.opacity = q < 0.75 ? 1 : clamp(1 - (q - 0.75) / 0.25);
+    });
+    B.forEach((l, j) => {
+      const r = clamp((p - 0.72 - j * 0.03) / 0.1);
+      const e = 1 - (1 - r) * (1 - r);
+      l.style.opacity = e;
+      l.style.transform = `translateY(${-(1 - e) * 1.6}rem)`;
+    });
+  }
+  addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  addEventListener("resize", measure);
+  if ("ResizeObserver" in window) new ResizeObserver(measure).observe(document.body);
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(measure);
+  measure();
+})();
 
 document.getElementById("year").textContent = new Date().getFullYear();
 </script>
