@@ -101,11 +101,11 @@ h1 .red{color:var(--red)}
 section{padding:clamp(2.5rem,7vw,6rem) 0;border-top:1px solid var(--line)}
 h2{margin:0 0 1.5rem;font-weight:800;font-size:clamp(2.2rem,5.5vw,5rem);line-height:.92;letter-spacing:-.045em}
 h2 .red{color:var(--red)}
-.facts{display:grid;grid-template-columns:repeat(4,1fr)}
-.fact{padding:0 clamp(1rem,2.5vw,2.2rem);border-left:2px solid var(--red)}
-.fact:first-child{padding-left:0;border-left:0}
-.fact b{display:block;font-weight:800;font-size:clamp(2rem,4.5vw,4.2rem);letter-spacing:-.045em;line-height:1}
-.fact span{display:block;margin-top:.5rem;font-style:italic;font-weight:500;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.fact{position:relative;isolation:isolate;overflow:hidden;padding:clamp(1.3rem,2.4vw,2rem) clamp(1.1rem,2vw,1.7rem);border-radius:1.6rem;background:linear-gradient(135deg,rgba(228,20,60,.09),rgba(228,20,60,.02) 70%)}
+.fact::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle,var(--red) 1.6px,transparent 2px) 0 0/.9rem .9rem;opacity:.4;-webkit-mask:linear-gradient(125deg,#000 0%,rgba(0,0,0,.25) 45%,transparent 80%);mask:linear-gradient(125deg,#000 0%,rgba(0,0,0,.25) 45%,transparent 80%)}
+.fact b{display:block;font-weight:800;font-size:clamp(1.7rem,3.3vw,3.2rem);letter-spacing:-.045em;line-height:1}
+.fact span{display:block;margin-top:.6rem;font-style:italic;font-weight:500;color:var(--muted)}
 .about p{max-width:36rem;font-size:1.15rem;font-weight:500;margin:0 0 2.5rem}
 /* horizontal image stack */
 .gwrap{position:relative}
@@ -135,7 +135,7 @@ h2 .red{color:var(--red)}
 footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
 .mbar{display:none}
 
-@media (max-width:64rem){.facts{grid-template-columns:1fr 1fr;row-gap:2rem}.fact:nth-child(3){padding-left:0;border-left:0}}
+@media (max-width:64rem){.facts{grid-template-columns:1fr 1fr}}
 @media (max-width:56rem){
   .hero{grid-template-columns:1fr}
   .stack{order:-1;height:clamp(22rem,70vw,34rem)}
@@ -165,9 +165,8 @@ footer{padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem;border-top:1px
   section{padding:2.25rem 0}
   h2{margin-bottom:1.1rem}
   .about p{font-size:1.05rem;margin-bottom:1.75rem}
-  .facts{row-gap:1.6rem}
-  .fact{padding:0 1rem}
-  .fact:nth-child(odd){padding-left:0;border-left:0}
+  .facts{gap:.7rem}
+  .fact{padding:1.1rem 1rem}
   .btns{flex-direction:column;gap:.6rem}
   .btns .btn{width:100%}
   .mbar{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(255,255,255,.94)}
